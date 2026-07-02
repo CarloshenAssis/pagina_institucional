@@ -2,18 +2,18 @@ import { z } from "zod";
 
 export const noticiaSchema = z.object({
   title: z.string().min(1, "Título obrigatório"),
-  slug: z.string().optional(),
+  slug: z.string().nullish(),
   category_id: z.string().uuid().optional().nullable(),
-  author: z.string().optional(),
-  excerpt: z.string().max(300).optional(),
-  content: z.string().optional(),
-  cover_url: z.string().url().optional().or(z.literal("")),
+  author: z.string().nullish(),
+  excerpt: z.string().max(300).nullish(),
+  content: z.string().nullish(),
+  cover_url: z.string().url().nullish().or(z.literal("")),
   gallery_urls: z.array(z.string().url()).default([]),
-  video_url: z.string().url().optional().or(z.literal("")),
-  pdf_url: z.string().url().optional().or(z.literal("")),
+  video_url: z.string().url().nullish().or(z.literal("")),
+  pdf_url: z.string().url().nullish().or(z.literal("")),
   featured: z.boolean().default(false),
   seo: z
-    .object({ meta_title: z.string().optional(), meta_description: z.string().max(160).optional() })
+    .object({ meta_title: z.string().nullish(), meta_description: z.string().max(160).nullish() })
     .default({}),
 });
 

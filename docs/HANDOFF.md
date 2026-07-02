@@ -14,7 +14,10 @@ Plano de implementação: `docs/superpowers/plans/2026-07-01-portal-instituciona
 | 3 — Shell do admin (Tasks 14–16, dashboard incluso) | ✅ concluída |
 | 4 — Engine genérico de módulo (Tasks 17–24) | ✅ concluída |
 | 5 — Módulos de conteúdo (Tasks 25–30: Trajetória, Projetos, Comunidade, Ideias, Notícias, Agenda) | ✅ concluída (verificada no browser em 2026-07-02: criar→publicar→duplicar→excluir→restaurar, categoria inline, toggle da Agenda persistindo) |
-| 6–11 | pendentes |
+| 6 — Páginas singleton (Tasks 31–32: Home config + hero, Sobre) | ✅ concluída (verificada no browser: hero salvo, seções toggle/reorder persistindo, Sobre atualizando o singleton) |
+| 7–11 | pendentes |
+
+> **Fix importante (2026-07-02):** campos de texto opcionais nos schemas Zod usam `.nullish()` em vez de `.optional()` — colunas `null` do banco reprovavam no zodResolver e o submit falhava silenciosamente ao editar registros/singletons existentes.
 
 > Task 16 verificada em 2026-07-02 no browser (guard de auth, login, 6 cards, 6 ações rápidas, badge de não lidas na sidebar). A verificação numa sessão cloud usou um mock local da API Supabase — ver "Sessões Claude Code na nuvem" abaixo. Os painéis de publicações/mensagens recentes ficaram para a Task 22, conforme o plano.
 
@@ -62,4 +65,4 @@ Plano de implementação: `docs/superpowers/plans/2026-07-01-portal-instituciona
 
 ## Próximo passo
 
-Fase 6 — páginas singleton (Tasks 31–32: Home config e Sobre).
+Fase 7 — Biblioteca de Mídias (Tasks 33–34): storage buckets (migration 0007) + upload. Atenção: exige criar os buckets no Supabase (ainda não existem) e a `SUPABASE_SERVICE_ROLE_KEY` pode ser necessária.

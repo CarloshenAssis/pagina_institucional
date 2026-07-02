@@ -1,22 +1,147 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
 
 @theme {
-  --color-primary: #1b2d6b;
-  --color-secondary: #c9a84c;
-  --color-accent: #e8327c;
-  --color-background: #f5f0e8;
+  --font-display: var(--font-fraunces), serif;
+  --font-body: var(--font-sans), sans-serif;
   --color-text-primary: #1b2d6b;
   --color-text-secondary: #4a4a4a;
-  --font-display: var(--font-fraunces), serif;
-  --font-body: var(--font-dm-sans), sans-serif;
+  --color-gold: #c9a84c;
+  --color-rose: #e8327c;
 }
 
-/* Os 6 tokens de cor acima são os fallbacks da paleta padrão do design spec.
-   Em runtime eles são sobrescritos a partir da tabela theme_settings
-   (ver plano do portal público) via CSS variables injetadas no <html>. */
+@theme inline {
+  --font-heading: var(--font-fraunces);
+  --font-sans: var(--font-sans);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
 
-body {
-  background: var(--color-background);
-  color: var(--color-text-primary);
-  font-family: var(--font-body);
+/* Paleta da marca (design spec) mapeada nos tokens do shadcn. Os hex abaixo
+   são os fallbacks padrão; em runtime o portal público sobrescreve a partir
+   da tabela theme_settings via CSS variables injetadas no <html>. */
+:root {
+  --background: #f5f0e8;
+  --foreground: #1b2d6b;
+  --card: #fdfcfa;
+  --card-foreground: #1b2d6b;
+  --popover: #fdfcfa;
+  --popover-foreground: #1b2d6b;
+  --primary: #1b2d6b;
+  --primary-foreground: #fdfcfa;
+  --secondary: #c9a84c;
+  --secondary-foreground: #1b2d6b;
+  --muted: #ece5d8;
+  --muted-foreground: #4a4a4a;
+  --accent: #ece5d8;
+  --accent-foreground: #1b2d6b;
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.88 0.015 85);
+  --input: oklch(0.88 0.015 85);
+  --ring: #1b2d6b;
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --radius: 0.375rem;
+  --sidebar: #1b2d6b;
+  --sidebar-foreground: #fdfcfa;
+  --sidebar-primary: #e8327c;
+  --sidebar-primary-foreground: #fdfcfa;
+  --sidebar-accent: oklch(0.32 0.07 275);
+  --sidebar-accent-foreground: #fdfcfa;
+  --sidebar-border: oklch(0.32 0.07 275);
+  --sidebar-ring: #c9a84c;
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: #c9a84c;
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: #e8327c;
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display;
+  }
 }

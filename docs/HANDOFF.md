@@ -11,13 +11,15 @@ Plano de implementação: `docs/superpowers/plans/2026-07-01-portal-instituciona
 | 0 — Setup (Next 16 + Tailwind v4 + shadcn/Base UI + Supabase + Vitest) | ✅ concluída |
 | 1 — Schema do banco (6 migrations aplicadas no Supabase hospedado) | ✅ concluída |
 | 2 — Auth (login + proxy.ts protegendo /admin) | ✅ concluída |
-| 3 — Shell do admin | ⚠️ Tasks 14–15 prontas; **Task 16 (dashboard) em WIP** — testes passam, falta verificação manual |
+| 3 — Shell do admin (Tasks 14–16, dashboard incluso) | ✅ concluída |
 | 4–11 | pendentes |
+
+> Task 16 verificada em 2026-07-02 no browser (guard de auth, login, 6 cards, 6 ações rápidas, badge de não lidas na sidebar). A verificação numa sessão cloud usou um mock local da API Supabase — ver "Sessões Claude Code na nuvem" abaixo. Os painéis de publicações/mensagens recentes ficaram para a Task 22, conforme o plano.
 
 ## Setup na nova máquina
 
 1. `git clone https://github.com/CarloshenAssis/pagina_institucional.git && npm install`
-2. Criar `.env.local` (copiar de `.env.local.example`) com:
+2. Criar `.env.local` (copiar de `.env.local.example`, agora versionado no repo) com:
    - `NEXT_PUBLIC_SUPABASE_URL=https://wbbqnbrhulasdttgapqw.supabase.co`
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY=` → pegar em supabase.com/dashboard → projeto **portal-institucional** (org OGESTOREFICIENTE) → Settings → API Keys (chave `anon` legacy)
    - `SUPABASE_SERVICE_ROLE_KEY=` → mesma tela (só será necessária na Fase 8 — formulário de contato)
@@ -35,9 +37,15 @@ Plano de implementação: `docs/superpowers/plans/2026-07-01-portal-instituciona
 1. **Next 16:** arquivos `"use server"` só podem exportar funções async → schemas Zod e helpers puros vivem em arquivo irmão (ex.: `schema.ts`, `nav-config.ts`) importado pelas actions; os testes importam do arquivo irmão.
 2. **shadcn/Base UI:** não existe `asChild` → usar `render={<Link .../>}` e `nativeButton={false}` em Button quando renderizar `<a>`.
 3. **`proxy.ts`** na raiz substitui `middleware.ts` (convenção nova do Next 16).
-4. **Vitest sem `@vitejs/plugin-react`** (conflito de peer deps com o pacote shadcn); `esbuild.jsx = "automatic"` no vitest.config.ts resolve JSX.
+4. **Vitest sem `@vitejs/plugin-react`** (conflito de peer deps com o pacote shadcn); o transform padrão do Vitest 4 (oxc) já compila TSX — o workaround antigo de `esbuild.jsx` foi removido do vitest.config.ts em 2026-07-02 (a opção era ignorada e quebrava o `tsc --noEmit`).
 5. Paleta da marca já mapeada nos tokens shadcn em `app/globals.css` (bg-primary = navy, bg-secondary = dourado, bg-background = bege, tokens de sidebar em navy). Utilitários extras: `text-gold`, `text-rose`, `font-display` (Fraunces), `font-sans` (DM Sans).
+
+## Sessões Claude Code na nuvem (claude.ai/code)
+
+- A URL e a anon key do Supabase são recuperáveis pelo MCP do Supabase conectado à sessão (`get_project_url` / `get_publishable_keys`) — não é preciso copiar do dashboard.
+- A política de rede padrão do ambiente **bloqueia `*.supabase.co`**, então o app rodando no container não alcança o banco real (login retorna "Credenciais incorretas" por erro de rede). Para E2E real na nuvem, adicionar `supabase.co` à allowlist de rede do ambiente em claude.ai/code → Environments. Alternativa usada na Task 16: mock local da API (GoTrue + PostgREST) apontado via `NEXT_PUBLIC_SUPABASE_URL`.
+- O MCP (SQL/logs/keys) funciona normalmente mesmo com a rede bloqueada, pois passa pela Management API.
 
 ## Próximo passo
 
-Terminar a Task 16 (dashboard: cards de resumo, atalhos rápidos, publicações recentes, mensagens recentes — ver plano), verificar no browser logado, commitar, e seguir para a Fase 4 (engine genérico de módulo, Tasks 17–24).
+Fase 4 — engine genérico de módulo (Tasks 17–24): começar pela Task 17 (`lib/content/slug.ts` + testes).

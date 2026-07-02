@@ -13,7 +13,7 @@ Plano de implementação: `docs/superpowers/plans/2026-07-01-portal-instituciona
 | 2 — Auth (login + proxy.ts protegendo /admin) | ✅ concluída |
 | 3 — Shell do admin (Tasks 14–16, dashboard incluso) | ✅ concluída |
 | 4 — Engine genérico de módulo (Tasks 17–24) | ✅ concluída |
-| 5 — Módulos de conteúdo (Tasks 25–30: Trajetória, Projetos, Comunidade, Ideias, Notícias, Agenda) | ✅ código pronto; testes/tsc/lint/build verdes — **falta verificação no browser** |
+| 5 — Módulos de conteúdo (Tasks 25–30: Trajetória, Projetos, Comunidade, Ideias, Notícias, Agenda) | ✅ concluída (verificada no browser em 2026-07-02: criar→publicar→duplicar→excluir→restaurar, categoria inline, toggle da Agenda persistindo) |
 | 6–11 | pendentes |
 
 > Task 16 verificada em 2026-07-02 no browser (guard de auth, login, 6 cards, 6 ações rápidas, badge de não lidas na sidebar). A verificação numa sessão cloud usou um mock local da API Supabase — ver "Sessões Claude Code na nuvem" abaixo. Os painéis de publicações/mensagens recentes ficaram para a Task 22, conforme o plano.
@@ -62,5 +62,4 @@ Plano de implementação: `docs/superpowers/plans/2026-07-01-portal-instituciona
 
 ## Próximo passo
 
-1. Verificar a Fase 5 no browser (criar/publicar/duplicar/excluir/restaurar em cada módulo — usar mock local da API se na nuvem, ver seção acima).
-2. Fase 6 — páginas singleton (Tasks 31–32: Home config e Sobre).
+Fase 6 — páginas singleton (Tasks 31–32: Home config e Sobre).

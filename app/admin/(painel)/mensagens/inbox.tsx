@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { listMessages, markMessageStatus, softDeleteMessage } from "./actions";
 import { buildWhatsAppLink } from "./whatsapp";
 
@@ -22,28 +22,32 @@ export function Inbox() {
   const [search, setSearch] = useState("");
   const [rows, setRows] = useState<Message[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const selectedIdRef = useRef<string | null>(null);
+
+  // Exibir a mensagem no detalhe conta como leitura — inclusive a
+  // auto-selecionada ao carregar a lista, não só a clicada.
+  function markReadLocally(id: string, list: Message[]): Message[] {
+    const msg = list.find((r) => r.id === id);
+    if (msg?.status !== "nova") return list;
+    void markMessageStatus(id, "lida");
+    return list.map((r) => (r.id === id ? { ...r, status: "lida" as const } : r));
+  }
 
   useEffect(() => {
     listMessages(filter, 1, search).then(({ rows }) => {
-      setRows(rows);
-      setSelectedId((current) => current ?? rows[0]?.id ?? null);
+      const id = selectedIdRef.current ?? rows[0]?.id ?? null;
+      selectedIdRef.current = id;
+      setSelectedId(id);
+      setRows(id ? markReadLocally(id, rows) : rows);
     });
   }, [filter, search]);
-
-  // Exibir a mensagem no detalhe conta como leitura — inclusive a
-  // auto-selecionada ao abrir a página, não só a clicada.
-  useEffect(() => {
-    const msg = rows.find((r) => r.id === selectedId);
-    if (msg?.status === "nova") {
-      void markMessageStatus(msg.id, "lida");
-      setRows((prev) => prev.map((r) => (r.id === msg.id ? { ...r, status: "lida" } : r)));
-    }
-  }, [selectedId, rows]);
 
   const selected = rows.find((r) => r.id === selectedId);
 
   function select(id: string) {
+    selectedIdRef.current = id;
     setSelectedId(id);
+    setRows(markReadLocally(id, rows));
   }
 
   return (
@@ -129,6 +133,7 @@ export function Inbox() {
                 onClick={async () => {
                   await softDeleteMessage(selected.id);
                   setRows((prev) => prev.filter((r) => r.id !== selected.id));
+                  selectedIdRef.current = null;
                   setSelectedId(null);
                 }}
                 className="px-5 py-2.5 border text-sm font-bold"

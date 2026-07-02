@@ -17,7 +17,10 @@ Plano de implementação: `docs/superpowers/plans/2026-07-01-portal-instituciona
 | 6 — Páginas singleton (Tasks 31–32: Home config + hero, Sobre) | ✅ concluída (verificada no browser: hero salvo, seções toggle/reorder persistindo, Sobre atualizando o singleton) |
 | 7 — Biblioteca de Mídias (Tasks 33–34) | ✅ concluída (verificada no browser: upload de imagem, vídeo por link E por upload direto, limite 50MB rejeitando, busca, excluir) |
 | 8 — Caixa de Entrada (Tasks 35–36) | ✅ concluída (verificada no browser: lista+detalhe, marcar lida ao exibir, WhatsApp condicional, filtros, busca, arquivar) |
-| 9–11 | pendentes |
+| 9 — Configurações & Perfil (Tasks 37–38) | ✅ concluída (verificada no browser: 4 abas persistindo, contador SEO, perfil com upsert, tema dark persistindo, troca de senha) |
+| 10–11 | pendentes |
+
+> Fase 9: `saveProfile` usa **upsert** (a linha em admin_profiles pode não existir para o usuário). `AdminThemeProvider` (next-themes, attribute="class") envolve o layout do painel. Regra nova do lint Next 16: setState síncrono dentro de useEffect é erro — o inbox foi refatorado para marcar leitura nos callbacks de evento/fetch.
 
 > Fase 8: helpers Turnstile/rate-limit prontos e testados, e `app/contact-actions.ts` (submitContactForm) pronto para o formulário público. **Pendências de ambiente para ativar o formulário de contato:** `TURNSTILE_SECRET_KEY` + `NEXT_PUBLIC_TURNSTILE_SITE_KEY` (criar site em dash.cloudflare.com → Turnstile, grátis) e `SUPABASE_SERVICE_ROLE_KEY` no `.env.local`/Vercel. UX ajustada: mensagem exibida no detalhe é marcada como lida (inclusive a auto-selecionada).
 
@@ -71,4 +74,4 @@ Plano de implementação: `docs/superpowers/plans/2026-07-01-portal-instituciona
 
 ## Próximo passo
 
-Fase 9 — Configurações & Perfil (Tasks 37–38), depois Fase 10 (RevisionHistory) e Fase 11 (deploy Vercel).
+Fase 10 — RevisionHistory (Task 39), depois Fase 11 (Task 40: deploy Vercel — exige projeto Vercel + env vars lá).

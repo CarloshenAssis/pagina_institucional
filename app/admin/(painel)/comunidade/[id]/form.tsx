@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { albumSchema, type AlbumInput } from "@/lib/validations/comunidade";
 import { saveAlbum, setAlbumStatus } from "../actions";
 import { StatusActionsBar } from "@/components/admin/status-actions-bar";
+import { RevisionHistory } from "@/components/admin/revision-history";
 import { MediaPicker } from "@/components/admin/media-picker";
 import { MediaListField } from "@/components/admin/media-list-field";
 import { CategoryCombobox } from "@/components/admin/category-combobox";
@@ -95,6 +96,7 @@ export function AlbumForm({ id, initial }: { id: string | null; initial?: Partia
             <span className="text-xs text-muted-foreground">{metaDescription.length}/160</span>
           </div>
         </fieldset>
+        {id && <RevisionHistory table="albuns" recordId={id} />}
         <StatusActionsBar
           scheduledAt={null}
           onAction={async (action, scheduledAt) => {

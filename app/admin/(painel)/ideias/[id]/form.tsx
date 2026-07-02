@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ideiaSchema, type IdeiaInput } from "@/lib/validations/ideias";
 import { saveIdeia, setIdeiaStatus } from "../actions";
 import { StatusActionsBar } from "@/components/admin/status-actions-bar";
+import { RevisionHistory } from "@/components/admin/revision-history";
 import { MediaPicker } from "@/components/admin/media-picker";
 import { CategoryCombobox } from "@/components/admin/category-combobox";
 import { RichTextEditor } from "@/components/admin/rich-text-editor";
@@ -101,6 +102,7 @@ export function IdeiaForm({ id, initial }: { id: string | null; initial?: Partia
             <span className="text-xs text-muted-foreground">{metaDescription.length}/160</span>
           </div>
         </fieldset>
+        {id && <RevisionHistory table="ideas" recordId={id} />}
         <StatusActionsBar
           scheduledAt={null}
           onAction={async (action, scheduledAt) => {

@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { projetoSchema, type ProjetoInput } from "@/lib/validations/projetos";
 import { saveProjeto, setProjetoStatus } from "../actions";
 import { StatusActionsBar } from "@/components/admin/status-actions-bar";
+import { RevisionHistory } from "@/components/admin/revision-history";
 import { MediaPicker } from "@/components/admin/media-picker";
 import { MediaListField } from "@/components/admin/media-list-field";
 import { CategoryCombobox } from "@/components/admin/category-combobox";
@@ -114,6 +115,7 @@ export function ProjetoForm({ id, initial }: { id: string | null; initial?: Part
             <span className="text-xs text-muted-foreground">{metaDescription.length}/160</span>
           </div>
         </fieldset>
+        {id && <RevisionHistory table="projects" recordId={id} />}
         <StatusActionsBar
           scheduledAt={null}
           onAction={async (action, scheduledAt) => {

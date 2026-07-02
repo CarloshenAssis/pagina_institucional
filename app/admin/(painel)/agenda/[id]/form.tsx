@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { eventoSchema, type EventoInput } from "@/lib/validations/agenda";
 import { saveEvento, setEventoStatus } from "../actions";
 import { StatusActionsBar } from "@/components/admin/status-actions-bar";
+import { RevisionHistory } from "@/components/admin/revision-history";
 import { MediaPicker } from "@/components/admin/media-picker";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -67,6 +68,7 @@ export function EventoForm({ id, initial }: { id: string | null; initial?: Parti
           trigger={<button type="button" className="text-sm underline w-fit">Selecionar imagem</button>}
           onSelect={(m) => setValue("image_url", m.url)}
         />
+        {id && <RevisionHistory table="events" recordId={id} />}
         <StatusActionsBar
           scheduledAt={null}
           onAction={async (action, scheduledAt) => {

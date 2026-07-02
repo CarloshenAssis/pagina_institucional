@@ -18,7 +18,8 @@ Plano de implementação: `docs/superpowers/plans/2026-07-01-portal-instituciona
 | 7 — Biblioteca de Mídias (Tasks 33–34) | ✅ concluída (verificada no browser: upload de imagem, vídeo por link E por upload direto, limite 50MB rejeitando, busca, excluir) |
 | 8 — Caixa de Entrada (Tasks 35–36) | ✅ concluída (verificada no browser: lista+detalhe, marcar lida ao exibir, WhatsApp condicional, filtros, busca, arquivar) |
 | 9 — Configurações & Perfil (Tasks 37–38) | ✅ concluída (verificada no browser: 4 abas persistindo, contador SEO, perfil com upsert, tema dark persistindo, troca de senha) |
-| 10–11 | pendentes |
+| 10 — Histórico de Alterações (Task 39) | ✅ concluída (verificada no browser: painel carrega sob demanda, formata entradas, recolhe; integrado nos 6 editores) |
+| 11 — Deploy Vercel (Task 40) | pendente |
 
 > Fase 9: `saveProfile` usa **upsert** (a linha em admin_profiles pode não existir para o usuário). `AdminThemeProvider` (next-themes, attribute="class") envolve o layout do painel. Regra nova do lint Next 16: setState síncrono dentro de useEffect é erro — o inbox foi refatorado para marcar leitura nos callbacks de evento/fetch.
 
@@ -74,4 +75,4 @@ Plano de implementação: `docs/superpowers/plans/2026-07-01-portal-instituciona
 
 ## Próximo passo
 
-Fase 10 — RevisionHistory (Task 39), depois Fase 11 (Task 40: deploy Vercel — exige projeto Vercel + env vars lá).
+Fase 11 — Task 40: deploy na Vercel (criar/vincular projeto, configurar env vars NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_ANON_KEY / NEXT_PUBLIC_SITE_URL — e mais tarde SUPABASE_SERVICE_ROLE_KEY + chaves Turnstile para o formulário de contato). O MCP da Vercel está disponível nas sessões Claude Code. Depois disso, o admin está completo — o próximo grande épico é o portal público (site em si).

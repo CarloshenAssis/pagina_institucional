@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { noticiaSchema, type NoticiaInput } from "@/lib/validations/noticias";
 import { saveNoticia, setNoticiaStatus } from "../actions";
 import { StatusActionsBar } from "@/components/admin/status-actions-bar";
+import { RevisionHistory } from "@/components/admin/revision-history";
 import { MediaPicker } from "@/components/admin/media-picker";
 import { MediaListField } from "@/components/admin/media-list-field";
 import { CategoryCombobox } from "@/components/admin/category-combobox";
@@ -121,6 +122,7 @@ export function NoticiaForm({
           </div>
         </fieldset>
         {id && savedSlug && <SocialShareButtons slug={savedSlug} status={savedStatus ?? "rascunho"} />}
+        {id && <RevisionHistory table="news" recordId={id} />}
         <StatusActionsBar
           scheduledAt={null}
           onAction={async (action, scheduledAt) => {

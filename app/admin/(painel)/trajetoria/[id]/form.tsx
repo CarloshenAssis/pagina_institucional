@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { trajetoriaSchema, type TrajetoriaInput } from "@/lib/validations/trajetoria";
 import { saveTrajetoriaItem, setTrajetoriaStatus } from "../actions";
 import { StatusActionsBar } from "@/components/admin/status-actions-bar";
+import { RevisionHistory } from "@/components/admin/revision-history";
 import { MediaPicker } from "@/components/admin/media-picker";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -68,6 +69,7 @@ export function TrajetoriaForm({ id, initial }: { id: string | null; initial?: P
           <Label htmlFor="order_index">Ordem</Label>
           <Input id="order_index" type="number" {...register("order_index", { valueAsNumber: true })} />
         </div>
+        {id && <RevisionHistory table="trajetoria_items" recordId={id} />}
         <StatusActionsBar
           scheduledAt={null}
           onAction={async (action, scheduledAt) => {

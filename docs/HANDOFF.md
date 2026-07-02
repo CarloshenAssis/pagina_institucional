@@ -73,8 +73,10 @@ Plano de implementação: `docs/superpowers/plans/2026-07-01-portal-instituciona
 - `categoryNameSchema` em `lib/validations/category.ts` (irmão), consumido por `app/admin/category-actions.ts`.
 - Componentes compartilhados novos: `MediaListField` (galerias), `CategoryCombobox`, `SocialShareButtons`.
 
+## Épico do admin: CONCLUÍDO (2026-07-02)
+
+40/40 tasks, merge na `main` (commit 7032655), deploy na Vercel feito pelo Carlos via import do repo. Pós-deploy pendente: conferir a URL de produção, cadastrá-la no Supabase Auth (Site URL/Redirect) e ajustar `NEXT_PUBLIC_SITE_URL` — ver `docs/deploy.md`.
+
 ## Próximo passo
 
-1. **Deploy (ação manual do Carlos):** vercel.com/new → Import Git Repository → `CarloshenAssis/pagina_institucional` → Deploy. Sem configuração extra (framework auto-detectado; env públicas têm fallback no next.config). Ver `docs/deploy.md` para o pós-deploy.
-2. Decidir o branch de produção: fazer merge de `claude/project-visibility-v7het6` na `main` (a `main` está desatualizada — todo o trabalho vive no branch).
-3. Próximo épico: **portal público** (o site que os visitantes veem) — plano próprio, fora do plano do admin.
+**Portal público** — plano novo em `docs/superpowers/plans/2026-07-02-portal-publico-plan.md` (29 tasks, fases P0–P8), já incorporando todos os desvios aprendidos. Começar pela Task 1 (tema dinâmico via CSS vars). Pendências de ambiente que entram na Fase P5 (contato): chaves do Cloudflare Turnstile + `SUPABASE_SERVICE_ROLE_KEY`.

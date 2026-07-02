@@ -19,7 +19,7 @@ Plano de implementação: `docs/superpowers/plans/2026-07-01-portal-instituciona
 | 8 — Caixa de Entrada (Tasks 35–36) | ✅ concluída (verificada no browser: lista+detalhe, marcar lida ao exibir, WhatsApp condicional, filtros, busca, arquivar) |
 | 9 — Configurações & Perfil (Tasks 37–38) | ✅ concluída (verificada no browser: 4 abas persistindo, contador SEO, perfil com upsert, tema dark persistindo, troca de senha) |
 | 10 — Histórico de Alterações (Task 39) | ✅ concluída (verificada no browser: painel carrega sob demanda, formata entradas, recolhe; integrado nos 6 editores) |
-| 11 — Deploy Vercel (Task 40) | pendente |
+| 11 — Deploy Vercel (Task 40) | ⚠️ docs + build prontos; fallbacks de env públicas no next.config permitem importar sem configurar nada — **falta 1 ação manual**: importar o repo em vercel.com/new (o CLI/MCP da sessão não têm credencial de deploy) |
 
 > Fase 9: `saveProfile` usa **upsert** (a linha em admin_profiles pode não existir para o usuário). `AdminThemeProvider` (next-themes, attribute="class") envolve o layout do painel. Regra nova do lint Next 16: setState síncrono dentro de useEffect é erro — o inbox foi refatorado para marcar leitura nos callbacks de evento/fetch.
 
@@ -75,4 +75,6 @@ Plano de implementação: `docs/superpowers/plans/2026-07-01-portal-instituciona
 
 ## Próximo passo
 
-Fase 11 — Task 40: deploy na Vercel (criar/vincular projeto, configurar env vars NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_ANON_KEY / NEXT_PUBLIC_SITE_URL — e mais tarde SUPABASE_SERVICE_ROLE_KEY + chaves Turnstile para o formulário de contato). O MCP da Vercel está disponível nas sessões Claude Code. Depois disso, o admin está completo — o próximo grande épico é o portal público (site em si).
+1. **Deploy (ação manual do Carlos):** vercel.com/new → Import Git Repository → `CarloshenAssis/pagina_institucional` → Deploy. Sem configuração extra (framework auto-detectado; env públicas têm fallback no next.config). Ver `docs/deploy.md` para o pós-deploy.
+2. Decidir o branch de produção: fazer merge de `claude/project-visibility-v7het6` na `main` (a `main` está desatualizada — todo o trabalho vive no branch).
+3. Próximo épico: **portal público** (o site que os visitantes veem) — plano próprio, fora do plano do admin.

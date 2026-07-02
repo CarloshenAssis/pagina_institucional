@@ -23,17 +23,24 @@ export async function getTrajetoriaItem(id: string) {
   return data;
 }
 
-export async function saveTrajetoriaItem(id: string | null, input: unknown) {
+export async function saveTrajetoriaItem(id: string | null, input: unknown): Promise<string> {
   const parsed = trajetoriaSchema.parse(input);
   const supabase = await createClient();
+  let savedId = id;
   if (id) {
     const { error } = await supabase.from("trajetoria_items").update(parsed).eq("id", id);
     if (error) throw error;
   } else {
-    const { error } = await supabase.from("trajetoria_items").insert({ ...parsed, status: "rascunho" });
+    const { data, error } = await supabase
+      .from("trajetoria_items")
+      .insert({ ...parsed, status: "rascunho" })
+      .select("id")
+      .single();
     if (error) throw error;
+    savedId = data.id;
   }
   revalidatePath("/admin/trajetoria");
+  return savedId!;
 }
 
 export async function softDeleteTrajetoria(id: string) {

@@ -8,18 +8,25 @@ import { slugify } from "@/lib/content/slug";
 
 const generic = createModuleActions("projects", "/admin/projetos");
 
-export async function saveProjeto(id: string | null, input: unknown) {
+export async function saveProjeto(id: string | null, input: unknown): Promise<string> {
   const parsed = projetoSchema.parse(input);
   const supabase = await createClient();
   const slug = parsed.slug?.trim() ? parsed.slug : slugify(parsed.title);
+  let savedId = id;
   if (id) {
     const { error } = await supabase.from("projects").update({ ...parsed, slug }).eq("id", id);
     if (error) throw error;
   } else {
-    const { error } = await supabase.from("projects").insert({ ...parsed, slug, status: "rascunho" });
+    const { data, error } = await supabase
+      .from("projects")
+      .insert({ ...parsed, slug, status: "rascunho" })
+      .select("id")
+      .single();
     if (error) throw error;
+    savedId = data.id;
   }
   revalidatePath("/admin/projetos");
+  return savedId!;
 }
 
 export async function listProjetos(includeDeleted = false) {

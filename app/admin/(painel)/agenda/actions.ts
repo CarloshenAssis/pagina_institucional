@@ -7,17 +7,24 @@ import { eventoSchema } from "@/lib/validations/agenda";
 
 const generic = createModuleActions("events", "/admin/agenda");
 
-export async function saveEvento(id: string | null, input: unknown) {
+export async function saveEvento(id: string | null, input: unknown): Promise<string> {
   const parsed = eventoSchema.parse(input);
   const supabase = await createClient();
+  let savedId = id;
   if (id) {
     const { error } = await supabase.from("events").update(parsed).eq("id", id);
     if (error) throw error;
   } else {
-    const { error } = await supabase.from("events").insert({ ...parsed, status: "rascunho" });
+    const { data, error } = await supabase
+      .from("events")
+      .insert({ ...parsed, status: "rascunho" })
+      .select("id")
+      .single();
     if (error) throw error;
+    savedId = data.id;
   }
   revalidatePath("/admin/agenda");
+  return savedId!;
 }
 
 export async function listEventos(includeDeleted = false) {

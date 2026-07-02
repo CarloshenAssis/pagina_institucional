@@ -8,18 +8,25 @@ import { slugify } from "@/lib/content/slug";
 
 const generic = createModuleActions("ideas", "/admin/ideias");
 
-export async function saveIdeia(id: string | null, input: unknown) {
+export async function saveIdeia(id: string | null, input: unknown): Promise<string> {
   const parsed = ideiaSchema.parse(input);
   const supabase = await createClient();
   const slug = parsed.slug?.trim() ? parsed.slug : slugify(parsed.title);
+  let savedId = id;
   if (id) {
     const { error } = await supabase.from("ideas").update({ ...parsed, slug }).eq("id", id);
     if (error) throw error;
   } else {
-    const { error } = await supabase.from("ideas").insert({ ...parsed, slug, status: "rascunho" });
+    const { data, error } = await supabase
+      .from("ideas")
+      .insert({ ...parsed, slug, status: "rascunho" })
+      .select("id")
+      .single();
     if (error) throw error;
+    savedId = data.id;
   }
   revalidatePath("/admin/ideias");
+  return savedId!;
 }
 
 export async function listIdeias(includeDeleted = false) {

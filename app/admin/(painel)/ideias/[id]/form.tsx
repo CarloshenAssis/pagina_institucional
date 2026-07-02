@@ -27,9 +27,14 @@ export function IdeiaForm({ id, initial }: { id: string | null; initial?: Partia
     },
   });
 
-  const onSave = handleSubmit(async (data) => {
-    await saveIdeia(id, data);
-  });
+  // handleSubmit resolve com undefined, então o id salvo é capturado fora.
+  const onSave = async (): Promise<string | null> => {
+    let savedId: string | null = id;
+    await handleSubmit(async (data) => {
+      savedId = await saveIdeia(id, data);
+    })();
+    return savedId;
+  };
 
   const metaDescription = watch("seo.meta_description") ?? "";
 
@@ -99,8 +104,8 @@ export function IdeiaForm({ id, initial }: { id: string | null; initial?: Partia
         <StatusActionsBar
           scheduledAt={null}
           onAction={async (action, scheduledAt) => {
-            await onSave();
-            if (id) await setIdeiaStatus(id, action, scheduledAt);
+            const savedId = await onSave();
+            if (savedId && action !== "rascunho") await setIdeiaStatus(savedId, action, scheduledAt);
             router.push("/admin/ideias");
           }}
         />

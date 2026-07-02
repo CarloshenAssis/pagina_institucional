@@ -24,9 +24,14 @@ export function TrajetoriaForm({ id, initial }: { id: string | null; initial?: P
     },
   });
 
-  const onSave = handleSubmit(async (data) => {
-    await saveTrajetoriaItem(id, data);
-  });
+  // handleSubmit resolve com undefined, então o id salvo é capturado fora.
+  const onSave = async (): Promise<string | null> => {
+    let savedId: string | null = id;
+    await handleSubmit(async (data) => {
+      savedId = await saveTrajetoriaItem(id, data);
+    })();
+    return savedId;
+  };
 
   return (
     <>
@@ -66,8 +71,8 @@ export function TrajetoriaForm({ id, initial }: { id: string | null; initial?: P
         <StatusActionsBar
           scheduledAt={null}
           onAction={async (action, scheduledAt) => {
-            await onSave();
-            if (id) await setTrajetoriaStatus(id, action, scheduledAt);
+            const savedId = await onSave();
+            if (savedId && action !== "rascunho") await setTrajetoriaStatus(savedId, action, scheduledAt);
             router.push("/admin/trajetoria");
           }}
         />

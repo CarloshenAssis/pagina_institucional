@@ -8,18 +8,25 @@ import { slugify } from "@/lib/content/slug";
 
 const generic = createModuleActions("news", "/admin/noticias");
 
-export async function saveNoticia(id: string | null, input: unknown) {
+export async function saveNoticia(id: string | null, input: unknown): Promise<string> {
   const parsed = noticiaSchema.parse(input);
   const supabase = await createClient();
   const slug = parsed.slug?.trim() ? parsed.slug : slugify(parsed.title);
+  let savedId = id;
   if (id) {
     const { error } = await supabase.from("news").update({ ...parsed, slug }).eq("id", id);
     if (error) throw error;
   } else {
-    const { error } = await supabase.from("news").insert({ ...parsed, slug, status: "rascunho" });
+    const { data, error } = await supabase
+      .from("news")
+      .insert({ ...parsed, slug, status: "rascunho" })
+      .select("id")
+      .single();
     if (error) throw error;
+    savedId = data.id;
   }
   revalidatePath("/admin/noticias");
+  return savedId!;
 }
 
 export async function listNoticias(includeDeleted = false) {

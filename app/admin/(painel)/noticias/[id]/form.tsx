@@ -40,9 +40,14 @@ export function NoticiaForm({
     },
   });
 
-  const onSave = handleSubmit(async (data) => {
-    await saveNoticia(id, data);
-  });
+  // handleSubmit resolve com undefined, então o id salvo é capturado fora.
+  const onSave = async (): Promise<string | null> => {
+    let savedId: string | null = id;
+    await handleSubmit(async (data) => {
+      savedId = await saveNoticia(id, data);
+    })();
+    return savedId;
+  };
 
   const metaDescription = watch("seo.meta_description") ?? "";
 
@@ -119,8 +124,8 @@ export function NoticiaForm({
         <StatusActionsBar
           scheduledAt={null}
           onAction={async (action, scheduledAt) => {
-            await onSave();
-            if (id) await setNoticiaStatus(id, action, scheduledAt);
+            const savedId = await onSave();
+            if (savedId && action !== "rascunho") await setNoticiaStatus(savedId, action, scheduledAt);
             router.push("/admin/noticias");
           }}
         />

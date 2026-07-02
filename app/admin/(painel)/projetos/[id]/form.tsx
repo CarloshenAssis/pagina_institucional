@@ -30,9 +30,14 @@ export function ProjetoForm({ id, initial }: { id: string | null; initial?: Part
     },
   });
 
-  const onSave = handleSubmit(async (data) => {
-    await saveProjeto(id, data);
-  });
+  // handleSubmit resolve com undefined, então o id salvo é capturado fora.
+  const onSave = async (): Promise<string | null> => {
+    let savedId: string | null = id;
+    await handleSubmit(async (data) => {
+      savedId = await saveProjeto(id, data);
+    })();
+    return savedId;
+  };
 
   const metaDescription = watch("seo.meta_description") ?? "";
 
@@ -112,8 +117,8 @@ export function ProjetoForm({ id, initial }: { id: string | null; initial?: Part
         <StatusActionsBar
           scheduledAt={null}
           onAction={async (action, scheduledAt) => {
-            await onSave();
-            if (id) await setProjetoStatus(id, action, scheduledAt);
+            const savedId = await onSave();
+            if (savedId && action !== "rascunho") await setProjetoStatus(savedId, action, scheduledAt);
             router.push("/admin/projetos");
           }}
         />

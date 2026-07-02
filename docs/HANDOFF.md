@@ -13,7 +13,8 @@ Plano de implementação: `docs/superpowers/plans/2026-07-01-portal-instituciona
 | 2 — Auth (login + proxy.ts protegendo /admin) | ✅ concluída |
 | 3 — Shell do admin (Tasks 14–16, dashboard incluso) | ✅ concluída |
 | 4 — Engine genérico de módulo (Tasks 17–24) | ✅ concluída |
-| 5–11 | pendentes |
+| 5 — Módulos de conteúdo (Tasks 25–30: Trajetória, Projetos, Comunidade, Ideias, Notícias, Agenda) | ✅ código pronto; testes/tsc/lint/build verdes — **falta verificação no browser** |
+| 6–11 | pendentes |
 
 > Task 16 verificada em 2026-07-02 no browser (guard de auth, login, 6 cards, 6 ações rápidas, badge de não lidas na sidebar). A verificação numa sessão cloud usou um mock local da API Supabase — ver "Sessões Claude Code na nuvem" abaixo. Os painéis de publicações/mensagens recentes ficaram para a Task 22, conforme o plano.
 
@@ -50,6 +51,16 @@ Plano de implementação: `docs/superpowers/plans/2026-07-01-portal-instituciona
 - A política de rede padrão do ambiente **bloqueia `*.supabase.co`**, então o app rodando no container não alcança o banco real (login retorna "Credenciais incorretas" por erro de rede). Para E2E real na nuvem, adicionar `supabase.co` à allowlist de rede do ambiente em claude.ai/code → Environments. Alternativa usada na Task 16: mock local da API (GoTrue + PostgREST) apontado via `NEXT_PUBLIC_SUPABASE_URL`.
 - O MCP (SQL/logs/keys) funciona normalmente mesmo com a rede bloqueada, pois passa pela Management API.
 
+## Desvios adicionais da Fase 5
+
+- **Rotas dos módulos** vivem em `app/admin/(painel)/<módulo>/` (grupo com sidebar + guard), não em `app/admin/<módulo>/` como o plano indicava — a URL não muda.
+- **`ModuleList`** (`components/admin/module-list.tsx`): wrapper client das list pages — server components não podem passar callbacks inline (onEdit) a client components; o wrapper resolve com router.push, e as Server Actions passam como props direto.
+- **`saveX` retorna o id salvo** (insert e update) e os forms usam esse retorno em `onAction` — sem isso, "Publicar →" num item novo salvava apenas rascunho (o plano previa comportamento publicado). Nota: `handleSubmit()` do react-hook-form resolve com `undefined`; o id é capturado fora do callback.
+- **Toggle da Agenda** chama a Server Action no `onCheckedChange` — o `<form action>` com Switch do plano nunca submeteria.
+- `categoryNameSchema` em `lib/validations/category.ts` (irmão), consumido por `app/admin/category-actions.ts`.
+- Componentes compartilhados novos: `MediaListField` (galerias), `CategoryCombobox`, `SocialShareButtons`.
+
 ## Próximo passo
 
-Fase 5 — módulos de conteúdo (Tasks 25–30), começando pela Task 25 (módulo Trajetória). Atenção: a Fase 5 usa `react-hook-form` + `@hookform/resolvers`, que ainda não estão instalados.
+1. Verificar a Fase 5 no browser (criar/publicar/duplicar/excluir/restaurar em cada módulo — usar mock local da API se na nuvem, ver seção acima).
+2. Fase 6 — páginas singleton (Tasks 31–32: Home config e Sobre).

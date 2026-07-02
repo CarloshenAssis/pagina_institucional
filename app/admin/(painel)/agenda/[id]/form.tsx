@@ -25,9 +25,14 @@ export function EventoForm({ id, initial }: { id: string | null; initial?: Parti
     },
   });
 
-  const onSave = handleSubmit(async (data) => {
-    await saveEvento(id, { ...data, date: new Date(data.date).toISOString() });
-  });
+  // handleSubmit resolve com undefined, então o id salvo é capturado fora.
+  const onSave = async (): Promise<string | null> => {
+    let savedId: string | null = id;
+    await handleSubmit(async (data) => {
+      savedId = await saveEvento(id, { ...data, date: new Date(data.date).toISOString() });
+    })();
+    return savedId;
+  };
 
   return (
     <>
@@ -65,8 +70,8 @@ export function EventoForm({ id, initial }: { id: string | null; initial?: Parti
         <StatusActionsBar
           scheduledAt={null}
           onAction={async (action, scheduledAt) => {
-            await onSave();
-            if (id) await setEventoStatus(id, action, scheduledAt);
+            const savedId = await onSave();
+            if (savedId && action !== "rascunho") await setEventoStatus(savedId, action, scheduledAt);
             router.push("/admin/agenda");
           }}
         />

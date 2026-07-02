@@ -8,19 +8,26 @@ import { slugify } from "@/lib/content/slug";
 
 const generic = createModuleActions("albuns", "/admin/comunidade");
 
-export async function saveAlbum(id: string | null, input: unknown) {
+export async function saveAlbum(id: string | null, input: unknown): Promise<string> {
   const parsed = albumSchema.parse(input);
   const supabase = await createClient();
   const slug = parsed.slug?.trim() ? parsed.slug : slugify(parsed.title);
   const payload = { ...parsed, slug, date: parsed.date || null };
+  let savedId = id;
   if (id) {
     const { error } = await supabase.from("albuns").update(payload).eq("id", id);
     if (error) throw error;
   } else {
-    const { error } = await supabase.from("albuns").insert({ ...payload, status: "rascunho" });
+    const { data, error } = await supabase
+      .from("albuns")
+      .insert({ ...payload, status: "rascunho" })
+      .select("id")
+      .single();
     if (error) throw error;
+    savedId = data.id;
   }
   revalidatePath("/admin/comunidade");
+  return savedId!;
 }
 
 export async function listAlbuns(includeDeleted = false) {

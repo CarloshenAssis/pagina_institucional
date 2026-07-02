@@ -15,7 +15,10 @@ Plano de implementação: `docs/superpowers/plans/2026-07-01-portal-instituciona
 | 4 — Engine genérico de módulo (Tasks 17–24) | ✅ concluída |
 | 5 — Módulos de conteúdo (Tasks 25–30: Trajetória, Projetos, Comunidade, Ideias, Notícias, Agenda) | ✅ concluída (verificada no browser em 2026-07-02: criar→publicar→duplicar→excluir→restaurar, categoria inline, toggle da Agenda persistindo) |
 | 6 — Páginas singleton (Tasks 31–32: Home config + hero, Sobre) | ✅ concluída (verificada no browser: hero salvo, seções toggle/reorder persistindo, Sobre atualizando o singleton) |
-| 7–11 | pendentes |
+| 7 — Biblioteca de Mídias (Tasks 33–34) | ✅ concluída (verificada no browser: upload de imagem, vídeo por link E por upload direto, limite 50MB rejeitando, busca, excluir) |
+| 8–11 | pendentes |
+
+> **Decisão de vídeo (2026-07-02, a pedido do Carlos):** vídeos agora são **híbridos** — link externo (YouTube/Vimeo, recomendado para vídeos longos) OU upload direto ≤50MB no bucket `public-videos` (vídeos curtos). O spec original era só link. Migration 0007 aplicada no Supabase hospedado com os 4 buckets (`public-images`, `public-pdfs`, `public-videos`, `private-assets`) + policies. Atenção à banda do plano free (~5GB/mês) se os vídeos hospedados forem muito acessados.
 
 > **Fix importante (2026-07-02):** campos de texto opcionais nos schemas Zod usam `.nullish()` em vez de `.optional()` — colunas `null` do banco reprovavam no zodResolver e o submit falhava silenciosamente ao editar registros/singletons existentes.
 
@@ -35,7 +38,7 @@ Plano de implementação: `docs/superpowers/plans/2026-07-01-portal-instituciona
 
 - **Supabase:** projeto `portal-institucional`, ref `wbbqnbrhulasdttgapqw`, região sa-east-1, plano free. Schema completo aplicado (16 tabelas, RLS, triggers de revision_log, 3 jobs pg_cron). Migrations espelhadas em `supabase/migrations/`.
 - **Atenção plano free:** projeto pausa após ~7 dias sem uso → jobs pg_cron param. Ver nota no spec do admin.
-- **Storage buckets ainda NÃO criados** (Fase 7 / migration 0007).
+- **Storage buckets criados em 2026-07-02** (migration 0007): `public-images`, `public-pdfs`, `public-videos`, `private-assets`.
 
 ## Desvios do plano já estabelecidos (o plano assumia Next 14 + Radix)
 
@@ -65,4 +68,4 @@ Plano de implementação: `docs/superpowers/plans/2026-07-01-portal-instituciona
 
 ## Próximo passo
 
-Fase 7 — Biblioteca de Mídias (Tasks 33–34): storage buckets (migration 0007) + upload. Atenção: exige criar os buckets no Supabase (ainda não existem) e a `SUPABASE_SERVICE_ROLE_KEY` pode ser necessária.
+Fase 8 — Caixa de Entrada (Tasks 35–36): verificação Turnstile + rate limit (exige `SUPABASE_SERVICE_ROLE_KEY` e chaves do Cloudflare Turnstile) e a página de mensagens.

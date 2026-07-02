@@ -4,10 +4,7 @@ import { useEditor, EditorContent } from "@tiptap/react";
 // StarterKit do Tiptap v3 já inclui Link — não importar separado.
 import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
-import Table from "@tiptap/extension-table";
-import TableRow from "@tiptap/extension-table-row";
-import TableCell from "@tiptap/extension-table-cell";
-import TableHeader from "@tiptap/extension-table-header";
+import { Table, TableRow, TableCell, TableHeader } from "@tiptap/extension-table";
 import Placeholder from "@tiptap/extension-placeholder";
 
 export function RichTextEditor({

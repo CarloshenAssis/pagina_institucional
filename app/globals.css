@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #1b2d6b;
+  --color-secondary: #c9a84c;
+  --color-accent: #e8327c;
+  --color-background: #f5f0e8;
+  --color-text-primary: #1b2d6b;
+  --color-text-secondary: #4a4a4a;
+  --font-display: var(--font-fraunces), serif;
+  --font-body: var(--font-dm-sans), sans-serif;
+}
+
+/* Os 6 tokens de cor acima são os fallbacks da paleta padrão do design spec.
+   Em runtime eles são sobrescritos a partir da tabela theme_settings
+   (ver plano do portal público) via CSS variables injetadas no <html>. */
+
+body {
+  background: var(--color-background);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+}

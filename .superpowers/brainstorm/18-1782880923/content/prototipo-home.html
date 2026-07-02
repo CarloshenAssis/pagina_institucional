@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Protótipo — Portal Tia Lu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1B2D6B;
+    --navy-light: #243680;
+    --beige: #F5F0E8;
+    --beige-dark: #EDE7D9;
+    --gold: #C9A84C;
+    --gold-light: #D4B568;
+    --rose: #E8327C;
+    --white: #FDFCFA;
+    --text: #1B2D6B;
+    --muted: #7A8AB0;
+    --border: #DDD7CC;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #1a1a2e;
+    color: #eee;
+    padding: 24px 16px;
+    min-height: 100vh;
+  }
+
+  h1.page-title {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #aaa;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  p.page-sub {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    color: #666;
+    text-align: center;
+    margin-bottom: 28px;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+  .tab {
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid #333;
+    background: #222;
+    color: #888;
+    transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .tab.active {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--navy);
+  }
+
+  /* BROWSER FRAME */
+  .browser {
+    max-width: 1100px;
+    margin: 0 auto;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.6);
+    border: 1px solid #333;
+  }
+  .browser-bar {
+    background: #2a2a2a;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .dots { display: flex; gap: 6px; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot-r { background: #FF5F57; }
+  .dot-y { background: #FFBD2E; }
+  .dot-g { background: #28CA41; }
+  .url-bar {
+    flex: 1;
+    background: #1e1e1e;
+    border-radius: 6px;
+    padding: 4px 12px;
+    font-size: 11px;
+    color: #888;
+    font-family: monospace;
+  }
+
+  /* SITE CONTENT */
+  .site { background: var(--beige); }
+
+  /* HEADER */
+  .site-header {
+    background: rgba(245,240,232,0.92);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .logo-mark {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: var(--navy);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Fraunces', serif;
+    font-size: 16px;
+    color: var(--beige);
+  }
+  .logo-text { line-height: 1; }
+  .logo-name {
+    font-family: 'Fraunces', serif;
+    font-size: 15px;
+    color: var(--navy);
+  }
+  .logo-tag {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-top: 3px;
+  }
+  .site-nav {
+    display: flex; gap: 28px;
+  }
+  .site-nav a {
+    font-size: 13px;
+    color: rgba(27,45,107,0.7);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  .btn-nav {
+    background: var(--navy);
+    color: var(--beige) !important;
+    padding: 8px 18px;
+    border-radius: 6px;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+  }
+
+  /* HERO */
+  .hero {
+    padding: 80px 48px 60px;
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 64px;
+    align-items: center;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+  }
+  .eyebrow::before {
+    content: '';
+    width: 28px; height: 1px;
+    background: var(--gold);
+  }
+  .hero h1 {
+    font-family: 'Fraunces', serif;
+    font-size: 52px;
+    line-height: 1.03;
+    color: var(--navy);
+    font-weight: 400;
+  }
+  .hero h1 span {
+    color: var(--gold);
+    display: block;
+  }
+  .hero-quote {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    font-style: italic;
+    color: rgba(27,45,107,0.8);
+    margin: 20px 0 16px;
+    line-height: 1.4;
+  }
+  .hero-desc {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--muted);
+    max-width: 440px;
+  }
+  .hero-btns {
+    display: flex; gap: 12px; margin-top: 32px; flex-wrap: wrap;
+  }
+  .btn-primary {
+    background: var(--navy);
+    color: var(--beige);
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    display: flex; align-items: center; gap: 8px;
+    cursor: pointer;
+  }
+  .btn-outline {
+    border: 1.5px solid var(--navy);
+    color: var(--navy);
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .btn-rose {
+    background: var(--rose);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .hero-img {
+    position: relative;
+  }
+  .hero-img-placeholder {
+    width: 100%;
+    aspect-ratio: 4/5;
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+    border-radius: 28px;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-img-placeholder::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 200px; height: 200px;
+    background: var(--gold);
+    opacity: 0.12;
+    border-radius: 50%;
+  }
+  .hero-img-label {
+    font-family: 'Fraunces', serif;
+    font-size: 13px;
+    color: rgba(245,240,232,0.5);
+    text-align: center;
+  }
+  .hero-badge {
+    position: absolute;
+    bottom: -20px; right: 20px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 20px;
+    width: 180px;
+    box-shadow: 0 20px 50px rgba(27,45,107,0.15);
+  }
+  .hero-badge-num {
+    font-family: 'Fraunces', serif;
+    font-size: 28px;
+    color: var(--navy);
+  }
+  .hero-badge-txt {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+    line-height: 1.4;
+  }
+  .gold-bar {
+    position: absolute;
+    left: -14px; top: 32px;
+    width: 4px; height: 80px;
+    background: var(--gold);
+    border-radius: 4px;
+  }
+
+  /* SECTION DIVIDER */
+  .section-strip {
+    background: var(--navy);
+    padding: 32px 48px;
+    display: flex;
+    gap: 0;
+    justify-content: center;
+  }
+  .stat-item {
+    padding: 0 48px;
+    border-right: 1px solid rgba(255,255,255,0.1);
+    text-align: center;
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-num {
+    font-family: 'Fraunces', serif;
+    font-size: 32px;
+    color: var(--gold);
+  }
+  .stat-label {
+    font-size: 11px;
+    color: rgba(245,240,232,0.6);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  /* CONTENT SECTIONS */
+  .section {
+    padding: 72px 48px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .section-alt {
+    background: var(--white);
+    padding: 72px 0;
+  }
+  .section-alt > .section { margin: 0 auto; }
+
+  .section-heading {
+    margin-bottom: 48px;
+  }
+  .section-heading h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 36px;
+    color: var(--navy);
+    font-weight: 400;
+    margin-top: 12px;
+  }
+  .section-heading p {
+    font-size: 14px;
+    color: var(--muted);
+    max-width: 480px;
+    margin-top: 12px;
+    line-height: 1.7;
+  }
+
+  /* CARDS GRID */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .card-img {
+    height: 140px;
+    background: linear-gradient(135deg, var(--beige-dark), var(--beige));
+    display: flex; align-items: center; justify-content: center;
+  }
+  .card-img-label {
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .card-body { padding: 20px; }
+  .card-tag {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+  .card-title {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    color: var(--navy);
+    font-weight: 400;
+    line-height: 1.3;
+    margin-bottom: 8px;
+  }
+  .card-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  .card-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-top: 14px;
+  }
+
+  /* NEWS */
+  .news-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 24px;
+  }
+  .news-featured {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .news-featured-img {
+    height: 200px;
+    background: linear-gradient(135deg, var(--navy), var(--navy-light));
+    display: flex; align-items: flex-end; padding: 20px;
+  }
+  .news-featured-tag {
+    background: var(--gold);
+    color: var(--navy);
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .news-featured-body { padding: 24px; }
+  .news-featured-title {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    color: var(--navy);
+    font-weight: 400;
+    line-height: 1.3;
+    margin-bottom: 10px;
+  }
+  .news-list { display: flex; flex-direction: column; gap: 12px; }
+  .news-item {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    display: flex; gap: 14px;
+  }
+  .news-item-img {
+    width: 64px; height: 64px;
+    border-radius: 8px;
+    background: var(--beige-dark);
+    flex-shrink: 0;
+  }
+  .news-item-title {
+    font-family: 'Fraunces', serif;
+    font-size: 14px;
+    color: var(--navy);
+    line-height: 1.3;
+    margin-bottom: 4px;
+  }
+  .news-item-date { font-size: 11px; color: var(--muted); }
+
+  /* FOOTER */
+  .site-footer {
+    background: var(--navy);
+    padding: 56px 48px 32px;
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr;
+    gap: 48px;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding-bottom: 40px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  .footer-logo-mark {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: rgba(245,240,232,0.12);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Fraunces', serif;
+    font-size: 17px;
+    color: var(--beige);
+    margin-bottom: 16px;
+  }
+  .footer-quote {
+    font-family: 'Fraunces', serif;
+    font-size: 17px;
+    font-style: italic;
+    color: rgba(245,240,232,0.75);
+    line-height: 1.5;
+    margin-top: 12px;
+  }
+  .footer-col-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(245,240,232,0.4);
+    margin-bottom: 16px;
+  }
+  .footer-col a {
+    display: block;
+    font-size: 13px;
+    color: rgba(245,240,232,0.65);
+    text-decoration: none;
+    margin-bottom: 10px;
+  }
+  .footer-bottom {
+    max-width: 1100px;
+    margin: 24px auto 0;
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: rgba(245,240,232,0.35);
+  }
+
+  /* ADMIN PREVIEW */
+  .admin-wrapper { background: #F0F2F5; }
+  .admin-sidebar {
+    width: 220px;
+    background: var(--navy);
+    position: fixed; top: 0; left: 0; height: 100%;
+    padding: 24px 0;
+  }
+  .admin-layout {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    min-height: 600px;
+  }
+  .admin-sidebar-inner {
+    background: var(--navy);
+    padding: 20px 0;
+  }
+  .admin-sidebar-logo {
+    padding: 0 20px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    margin-bottom: 16px;
+  }
+  .admin-sidebar-logo-name {
+    font-family: 'Fraunces', serif;
+    font-size: 14px;
+    color: var(--beige);
+  }
+  .admin-sidebar-logo-sub {
+    font-size: 9px;
+    color: var(--gold);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+  .admin-nav-item {
+    padding: 9px 20px;
+    font-size: 12px;
+    color: rgba(245,240,232,0.55);
+    display: flex; align-items: center; gap: 10px;
+    cursor: pointer;
+  }
+  .admin-nav-item.active {
+    background: rgba(255,255,255,0.07);
+    color: var(--beige);
+    border-right: 2px solid var(--gold);
+  }
+  .admin-nav-icon {
+    width: 16px; height: 16px;
+    border-radius: 3px;
+    background: currentColor;
+    opacity: 0.4;
+  }
+  .admin-content { background: #F0F2F5; padding: 28px; }
+  .admin-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+  .admin-page-title {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    color: #1a1a2e;
+  }
+  .admin-btn {
+    background: var(--navy);
+    color: white;
+    padding: 9px 18px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .admin-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .admin-stat {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #E5E7EB;
+  }
+  .admin-stat-label {
+    font-size: 11px;
+    color: #9CA3AF;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+  }
+  .admin-stat-num {
+    font-family: 'Fraunces', serif;
+    font-size: 28px;
+    color: var(--navy);
+  }
+  .admin-stat-tag {
+    font-size: 10px;
+    color: #10B981;
+    margin-top: 4px;
+  }
+  .admin-table {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #E5E7EB;
+    overflow: hidden;
+  }
+  .admin-table-header {
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #F3F4F6;
+  }
+  .admin-table-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #111;
+  }
+  .admin-table-row {
+    padding: 14px 20px;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 80px;
+    gap: 12px;
+    align-items: center;
+    border-bottom: 1px solid #F9FAFB;
+    font-size: 12px;
+    color: #374151;
+  }
+  .admin-table-row.header-row {
+    font-size: 11px;
+    font-weight: 600;
+    color: #9CA3AF;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: #FAFAFA;
+  }
+  .badge-pub {
+    display: inline-block;
+    background: #D1FAE5;
+    color: #065F46;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 500;
+  }
+  .badge-draft {
+    display: inline-block;
+    background: #FEF3C7;
+    color: #92400E;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 500;
+  }
+  .action-btns { display: flex; gap: 6px; }
+  .action-btn {
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    border: 1px solid #E5E7EB;
+    background: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    cursor: pointer;
+    color: #6B7280;
+  }
+
+  /* PAGES NAV */
+  .pages-nav {
+    display: flex; gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 28px;
+  }
+  .page-btn {
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 500;
+    background: #222;
+    border: 1px solid #333;
+    color: #666;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .page-btn.active {
+    background: var(--navy);
+    border-color: var(--navy);
+    color: white;
+  }
+
+  /* SOBRE PAGE */
+  .sobre-hero {
+    background: var(--navy);
+    padding: 80px 48px 64px;
+    position: relative;
+    overflow: hidden;
+  }
+  .sobre-hero::before {
+    content: '';
+    position: absolute;
+    right: -80px; top: -80px;
+    width: 400px; height: 400px;
+    background: var(--gold);
+    opacity: 0.06;
+    border-radius: 50%;
+  }
+  .sobre-hero .eyebrow { color: var(--gold); margin-bottom: 16px; }
+  .sobre-hero h1 {
+    font-family: 'Fraunces', serif;
+    font-size: 44px;
+    color: var(--beige);
+    font-weight: 400;
+    max-width: 600px;
+    line-height: 1.1;
+  }
+  .sobre-hero p {
+    font-size: 15px;
+    color: rgba(245,240,232,0.65);
+    max-width: 520px;
+    margin-top: 16px;
+    line-height: 1.7;
+  }
+  .sobre-content {
+    padding: 64px 48px;
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: start;
+  }
+  .sobre-img-placeholder {
+    aspect-ratio: 4/5;
+    background: linear-gradient(135deg, var(--beige-dark), var(--beige));
+    border-radius: 20px;
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid var(--border);
+  }
+  .sobre-text h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 28px;
+    color: var(--navy);
+    font-weight: 400;
+    margin-bottom: 16px;
+  }
+  .sobre-text p {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.8;
+    margin-bottom: 16px;
+  }
+  .timeline-item {
+    display: flex; gap: 16px;
+    margin-bottom: 20px;
+  }
+  .timeline-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--gold);
+    margin-top: 4px;
+    flex-shrink: 0;
+  }
+  .timeline-content { font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .timeline-year { font-weight: 600; color: var(--navy); }
+</style>
+</head>
+<body>
+
+<h1 class="page-title">Protótipo Visual — Portal Tia Lu</h1>
+<p class="page-sub">Navegue pelas páginas abaixo. Feedback no terminal.</p>
+
+<div class="tabs">
+  <div class="tab active" onclick="showPage('home', this)">Home</div>
+  <div class="tab" onclick="showPage('sobre', this)">Sobre</div>
+  <div class="tab" onclick="showPage('projetos', this)">Projetos</div>
+  <div class="tab" onclick="showPage('noticias', this)">Notícias</div>
+  <div class="tab" onclick="showPage('admin', this)">Admin</div>
+</div>
+
+<div class="browser">
+  <div class="browser-bar">
+    <div class="dots">
+      <div class="dot dot-r"></div>
+      <div class="dot dot-y"></div>
+      <div class="dot dot-g"></div>
+    </div>
+    <div class="url-bar" id="url-bar">tialu.com.br</div>
+  </div>
+
+  <!-- HOME -->
+  <div class="site" id="page-home">
+    <header class="site-header">
+      <div class="logo">
+        <div class="logo-mark">Lu</div>
+        <div class="logo-text">
+          <div class="logo-name">Luciana Casimiro</div>
+          <div class="logo-tag">Tia Lu</div>
+        </div>
+      </div>
+      <nav class="site-nav">
+        <a href="#">Sobre</a>
+        <a href="#">Trajetória</a>
+        <a href="#">Projetos</a>
+        <a href="#">Ideias</a>
+        <a href="#">Notícias</a>
+        <a href="#">Agenda</a>
+        <a href="#" class="btn-nav">Contato</a>
+      </nav>
+    </header>
+
+    <div class="hero">
+      <div>
+        <div class="eyebrow">Vereadora · Mandato 2025–2028</div>
+        <h1>Luciana Casimiro<span>Tia Lu</span></h1>
+        <p class="hero-quote">"Cuidar de pessoas, transformar vidas."</p>
+        <p class="hero-desc">Há mais de 20 anos ao lado da comunidade, construindo pontes entre os cidadãos e as políticas públicas que realmente fazem diferença.</p>
+        <div class="hero-btns">
+          <div class="btn-primary">Conheça minha história →</div>
+          <div class="btn-outline">Ver projetos</div>
+          <div class="btn-rose">Fale comigo</div>
+        </div>
+      </div>
+      <div class="hero-img">
+        <div class="gold-bar"></div>
+        <div class="hero-img-placeholder">
+          <p class="hero-img-label">Foto da vereadora<br><span style="font-size:10px;opacity:0.4">Carregada pelo admin</span></p>
+        </div>
+        <div class="hero-badge">
+          <div class="hero-badge-num">+20 anos</div>
+          <div class="hero-badge-txt">dedicados ao trabalho social na comunidade</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background: var(--navy); padding: 32px 0;">
+      <div style="display:flex; justify-content:center; gap:0; max-width:800px; margin:0 auto;">
+        <div class="stat-item">
+          <div class="stat-num">0</div>
+          <div class="stat-label">Projetos</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">0</div>
+          <div class="stat-label">Notícias</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">0</div>
+          <div class="stat-label">Eventos</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">0</div>
+          <div class="stat-label">Ideias</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROJETOS SEÇÃO -->
+    <div class="section">
+      <div class="section-heading">
+        <div class="eyebrow">Projetos</div>
+        <h2>Iniciativas em andamento</h2>
+        <p>Acompanhe os projetos e ações legislativas. Todo o conteúdo é gerenciado pelo painel administrativo.</p>
+      </div>
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-img"><span class="card-img-label" style="font-size:11px;color:#ccc;">Imagem do projeto</span></div>
+          <div class="card-body">
+            <div class="card-tag">Educação</div>
+            <div class="card-title">Título do projeto</div>
+            <div class="card-desc">Descrição resumida do projeto. Publicado via painel administrativo.</div>
+            <div class="card-link">Ver detalhes →</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-img"><span class="card-img-label" style="font-size:11px;color:#ccc;">Imagem do projeto</span></div>
+          <div class="card-body">
+            <div class="card-tag">Saúde</div>
+            <div class="card-title">Título do projeto</div>
+            <div class="card-desc">Descrição resumida do projeto. Publicado via painel administrativo.</div>
+            <div class="card-link">Ver detalhes →</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-img"><span class="card-img-label" style="font-size:11px;color:#ccc;">Imagem do projeto</span></div>
+          <div class="card-body">
+            <div class="card-tag">Comunidade</div>
+            <div class="card-title">Título do projeto</div>
+            <div class="card-desc">Descrição resumida do projeto. Publicado via painel administrativo.</div>
+            <div class="card-link">Ver detalhes →</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NOTÍCIAS SEÇÃO -->
+    <div class="section-alt">
+      <div class="section" style="padding-top:0">
+        <div class="section-heading" style="margin-bottom:32px">
+          <div class="eyebrow">Notícias</div>
+          <h2>Últimas notícias</h2>
+        </div>
+        <div class="news-grid">
+          <div class="news-featured">
+            <div class="news-featured-img">
+              <span class="news-featured-tag">Destaque</span>
+            </div>
+            <div class="news-featured-body">
+              <div class="news-featured-title">Título da notícia em destaque</div>
+              <p style="font-size:13px;color:var(--muted);line-height:1.6">Resumo da notícia principal. Publicado e editado pelo painel administrativo.</p>
+            </div>
+          </div>
+          <div class="news-list">
+            <div class="news-item">
+              <div class="news-item-img"></div>
+              <div>
+                <div class="news-item-title">Título da notícia</div>
+                <div class="news-item-date">Publicado pelo admin</div>
+              </div>
+            </div>
+            <div class="news-item">
+              <div class="news-item-img"></div>
+              <div>
+                <div class="news-item-title">Título da notícia</div>
+                <div class="news-item-date">Publicado pelo admin</div>
+              </div>
+            </div>
+            <div class="news-item">
+              <div class="news-item-img"></div>
+              <div>
+                <div class="news-item-title">Título da notícia</div>
+                <div class="news-item-date">Publicado pelo admin</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="site-footer">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-logo-mark">Lu</div>
+          <div class="logo-name" style="color:var(--beige);font-family:'Fraunces',serif;font-size:15px;">Luciana Casimiro</div>
+          <div class="logo-tag" style="color:var(--gold);font-size:9px;letter-spacing:0.28em;text-transform:uppercase;">Tia Lu</div>
+          <div class="footer-quote">"Cuidar de pessoas, transformar vidas."</div>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-label">Navegação</div>
+          <a href="#">Sobre</a><a href="#">Trajetória</a>
+          <a href="#">Projetos</a><a href="#">Ideias</a>
+          <a href="#">Notícias</a><a href="#">Agenda</a>
+          <a href="#">Contato</a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-label">Contato</div>
+          <a href="#">WhatsApp</a>
+          <a href="#">Instagram</a>
+          <a href="#">Facebook</a>
+          <a href="#">E-mail</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2025 Luciana Casimiro. Todos os direitos reservados.</span>
+        <span>Política de Privacidade</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- SOBRE -->
+  <div class="site" id="page-sobre" style="display:none">
+    <header class="site-header">
+      <div class="logo">
+        <div class="logo-mark">Lu</div>
+        <div class="logo-text">
+          <div class="logo-name">Luciana Casimiro</div>
+          <div class="logo-tag">Tia Lu</div>
+        </div>
+      </div>
+      <nav class="site-nav">
+        <a href="#" style="color:var(--navy);font-weight:600;">Sobre</a>
+        <a href="#">Trajetória</a>
+        <a href="#">Projetos</a>
+        <a href="#">Notícias</a>
+        <a href="#" class="btn-nav">Contato</a>
+      </nav>
+    </header>
+    <div class="sobre-hero">
+      <div class="eyebrow">Sobre</div>
+      <h1>Uma trajetória construída pelo povo</h1>
+      <p>Conheça a história, os valores e o compromisso que guiam cada decisão no mandato.</p>
+    </div>
+    <div class="sobre-content">
+      <div class="sobre-img-placeholder">
+        <p style="font-size:12px;color:var(--muted)">Foto gerenciada<br>pelo admin</p>
+      </div>
+      <div class="sobre-text">
+        <div class="eyebrow">Quem é a Tia Lu</div>
+        <h2>Uma voz da comunidade na câmara</h2>
+        <p>Texto completo sobre a vereadora. Todo o conteúdo desta página é gerenciado pelo painel administrativo — textos, fotos, vídeos e documentos.</p>
+        <p>A administradora pode editar este conteúdo a qualquer momento sem precisar de conhecimento técnico.</p>
+        <div style="margin-top:24px">
+          <div class="eyebrow" style="margin-bottom:16px">Marcos importantes</div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content"><span class="timeline-year">Ano —</span> Marco da trajetória</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content"><span class="timeline-year">Ano —</span> Marco da trajetória</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content"><span class="timeline-year">Ano —</span> Marco da trajetória</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROJETOS -->
+  <div class="site" id="page-projetos" style="display:none">
+    <header class="site-header">
+      <div class="logo">
+        <div class="logo-mark">Lu</div>
+        <div class="logo-text">
+          <div class="logo-name">Luciana Casimiro</div>
+          <div class="logo-tag">Tia Lu</div>
+        </div>
+      </div>
+      <nav class="site-nav">
+        <a href="#">Sobre</a>
+        <a href="#" style="color:var(--navy);font-weight:600;">Projetos</a>
+        <a href="#">Notícias</a>
+        <a href="#" class="btn-nav">Contato</a>
+      </nav>
+    </header>
+    <div class="sobre-hero" style="padding-bottom:40px">
+      <div class="eyebrow">Projetos</div>
+      <h1>Iniciativas e propostas legislativas</h1>
+      <p>Acompanhe todos os projetos, seus status e resultados.</p>
+      <div style="display:flex;gap:10px;margin-top:24px;flex-wrap:wrap;">
+        <span style="background:rgba(255,255,255,0.12);color:var(--beige);padding:6px 14px;border-radius:20px;font-size:11px;font-weight:500;">Todos</span>
+        <span style="background:rgba(255,255,255,0.06);color:rgba(245,240,232,0.5);padding:6px 14px;border-radius:20px;font-size:11px;">Educação</span>
+        <span style="background:rgba(255,255,255,0.06);color:rgba(245,240,232,0.5);padding:6px 14px;border-radius:20px;font-size:11px;">Saúde</span>
+        <span style="background:rgba(255,255,255,0.06);color:rgba(245,240,232,0.5);padding:6px 14px;border-radius:20px;font-size:11px;">Comunidade</span>
+        <span style="background:rgba(255,255,255,0.06);color:rgba(245,240,232,0.5);padding:6px 14px;border-radius:20px;font-size:11px;">Infraestrutura</span>
+      </div>
+    </div>
+    <div class="section">
+      <div class="cards-grid">
+        <div class="card"><div class="card-img"><span class="card-img-label" style="font-size:11px;color:#ccc;">Imagem</span></div><div class="card-body"><div class="card-tag">Categoria</div><div class="card-title">Título do Projeto</div><div class="card-desc">Descrição publicada pelo admin.</div><div style="display:flex;gap:8px;margin-top:12px;align-items:center"><span style="font-size:10px;background:#D1FAE5;color:#065F46;padding:2px 8px;border-radius:10px;">Em andamento</span><span class="card-link" style="margin:0">Ver mais →</span></div></div></div>
+        <div class="card"><div class="card-img"><span class="card-img-label" style="font-size:11px;color:#ccc;">Imagem</span></div><div class="card-body"><div class="card-tag">Categoria</div><div class="card-title">Título do Projeto</div><div class="card-desc">Descrição publicada pelo admin.</div><div style="display:flex;gap:8px;margin-top:12px;align-items:center"><span style="font-size:10px;background:#FEF3C7;color:#92400E;padding:2px 8px;border-radius:10px;">Proposto</span><span class="card-link" style="margin:0">Ver mais →</span></div></div></div>
+        <div class="card"><div class="card-img"><span class="card-img-label" style="font-size:11px;color:#ccc;">Imagem</span></div><div class="card-body"><div class="card-tag">Categoria</div><div class="card-title">Título do Projeto</div><div class="card-desc">Descrição publicada pelo admin.</div><div style="display:flex;gap:8px;margin-top:12px;align-items:center"><span style="font-size:10px;background:#DBEAFE;color:#1E40AF;padding:2px 8px;border-radius:10px;">Aprovado</span><span class="card-link" style="margin:0">Ver mais →</span></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOTÍCIAS -->
+  <div class="site" id="page-noticias" style="display:none">
+    <header class="site-header">
+      <div class="logo">
+        <div class="logo-mark">Lu</div>
+        <div class="logo-text">
+          <div class="logo-name">Luciana Casimiro</div>
+          <div class="logo-tag">Tia Lu</div>
+        </div>
+      </div>
+      <nav class="site-nav">
+        <a href="#">Sobre</a><a href="#">Projetos</a>
+        <a href="#" style="color:var(--navy);font-weight:600;">Notícias</a>
+        <a href="#" class="btn-nav">Contato</a>
+      </nav>
+    </header>
+    <div class="sobre-hero">
+      <div class="eyebrow">Notícias</div>
+      <h1>Fique por dentro do mandato</h1>
+      <p>Transparência e comunicação direta com a comunidade.</p>
+    </div>
+    <div class="section">
+      <div class="news-grid" style="grid-template-columns:1.4fr 1fr;gap:24px">
+        <div class="news-featured">
+          <div class="news-featured-img" style="height:240px"><span class="news-featured-tag">Destaque</span></div>
+          <div class="news-featured-body">
+            <div class="news-featured-title">Título da notícia em destaque publicada pelo admin</div>
+            <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-top:8px">Conteúdo completo gerenciado pelo painel. Texto, imagens e data de publicação.</p>
+            <div style="margin-top:16px;font-size:12px;font-weight:600;color:var(--navy);">Ler mais →</div>
+          </div>
+        </div>
+        <div class="news-list">
+          <div class="news-item"><div class="news-item-img"></div><div><div class="news-item-title">Título da notícia</div><div class="news-item-date">Categoria · Admin</div></div></div>
+          <div class="news-item"><div class="news-item-img"></div><div><div class="news-item-title">Título da notícia</div><div class="news-item-date">Categoria · Admin</div></div></div>
+          <div class="news-item"><div class="news-item-img"></div><div><div class="news-item-title">Título da notícia</div><div class="news-item-date">Categoria · Admin</div></div></div>
+          <div class="news-item"><div class="news-item-img"></div><div><div class="news-item-title">Título da notícia</div><div class="news-item-date">Categoria · Admin</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN -->
+  <div id="page-admin" style="display:none">
+    <div class="admin-layout">
+      <div class="admin-sidebar-inner">
+        <div class="admin-sidebar-logo">
+          <div class="admin-sidebar-logo-name">Luciana Casimiro</div>
+          <div class="admin-sidebar-logo-sub">Painel Admin</div>
+        </div>
+        <div class="admin-nav-item active">📊 Dashboard</div>
+        <div style="padding:8px 20px;font-size:9px;color:rgba(255,255,255,0.25);letter-spacing:0.15em;text-transform:uppercase;margin-top:8px">Conteúdo</div>
+        <div class="admin-nav-item">📄 Página Inicial</div>
+        <div class="admin-nav-item">👤 Sobre</div>
+        <div class="admin-nav-item">🗂️ Trajetória</div>
+        <div class="admin-nav-item">🏗️ Projetos</div>
+        <div class="admin-nav-item">🤝 Comunidade</div>
+        <div class="admin-nav-item">💡 Ideias</div>
+        <div class="admin-nav-item">📰 Notícias</div>
+        <div class="admin-nav-item">📅 Agenda</div>
+        <div style="padding:8px 20px;font-size:9px;color:rgba(255,255,255,0.25);letter-spacing:0.15em;text-transform:uppercase;margin-top:8px">Sistema</div>
+        <div class="admin-nav-item">📬 Mensagens</div>
+        <div class="admin-nav-item">⚙️ Configurações</div>
+      </div>
+      <div class="admin-content">
+        <div class="admin-topbar">
+          <div class="admin-page-title">Dashboard</div>
+          <div class="admin-btn">+ Nova publicação</div>
+        </div>
+        <div class="admin-cards">
+          <div class="admin-stat">
+            <div class="admin-stat-label">Projetos</div>
+            <div class="admin-stat-num">0</div>
+            <div class="admin-stat-tag">sistema vazio</div>
+          </div>
+          <div class="admin-stat">
+            <div class="admin-stat-label">Notícias</div>
+            <div class="admin-stat-num">0</div>
+            <div class="admin-stat-tag">sistema vazio</div>
+          </div>
+          <div class="admin-stat">
+            <div class="admin-stat-label">Eventos</div>
+            <div class="admin-stat-num">0</div>
+            <div class="admin-stat-tag">sistema vazio</div>
+          </div>
+          <div class="admin-stat">
+            <div class="admin-stat-label">Mensagens</div>
+            <div class="admin-stat-num">0</div>
+            <div class="admin-stat-tag">sistema vazio</div>
+          </div>
+        </div>
+        <div class="admin-table">
+          <div class="admin-table-header">
+            <div class="admin-table-title">Publicações recentes</div>
+            <div style="font-size:12px;color:#6B7280;">Ver todas</div>
+          </div>
+          <div class="admin-table-row header-row">
+            <div>Título</div><div>Módulo</div><div>Status</div><div>Ações</div>
+          </div>
+          <div style="padding:40px;text-align:center;color:#9CA3AF;font-size:13px;">
+            Nenhum conteúdo publicado ainda.<br>
+            <span style="font-size:12px;color:#D1D5DB;">Use o menu lateral para criar o primeiro conteúdo.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function showPage(page, tab) {
+  document.querySelectorAll('[id^="page-"]').forEach(p => p.style.display = 'none');
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + page).style.display = 'block';
+  tab.classList.add('active');
+  const urls = {
+    home: 'tialu.com.br',
+    sobre: 'tialu.com.br/sobre',
+    projetos: 'tialu.com.br/projetos',
+    noticias: 'tialu.com.br/noticias',
+    admin: 'tialu.com.br/admin'
+  };
+  document.getElementById('url-bar').textContent = urls[page];
+}
+</script>
+</body>
+</html>

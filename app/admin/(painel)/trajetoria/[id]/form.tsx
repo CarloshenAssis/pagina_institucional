@@ -1,0 +1,77 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { trajetoriaSchema, type TrajetoriaInput } from "@/lib/validations/trajetoria";
+import { saveTrajetoriaItem, setTrajetoriaStatus } from "../actions";
+import { StatusActionsBar } from "@/components/admin/status-actions-bar";
+import { MediaPicker } from "@/components/admin/media-picker";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Topbar } from "@/components/admin/topbar";
+
+export function TrajetoriaForm({ id, initial }: { id: string | null; initial?: Partial<TrajetoriaInput> }) {
+  const router = useRouter();
+  const { register, handleSubmit, setValue } = useForm({
+    resolver: zodResolver(trajetoriaSchema),
+    defaultValues: {
+      year: new Date().getFullYear(),
+      title: "",
+      order_index: 0,
+      ...initial,
+    },
+  });
+
+  const onSave = handleSubmit(async (data) => {
+    await saveTrajetoriaItem(id, data);
+  });
+
+  return (
+    <>
+      <Topbar title={id ? "Editar etapa" : "Nova etapa"} />
+      <div className="p-9 max-w-3xl flex flex-col gap-5">
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="year">Ano</Label>
+          <Input id="year" type="number" {...register("year", { valueAsNumber: true })} />
+        </div>
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="title">Título</Label>
+          <Input id="title" {...register("title")} />
+        </div>
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="description">Descrição</Label>
+          <Textarea id="description" {...register("description")} />
+        </div>
+        <MediaPicker
+          type="imagem"
+          trigger={<button type="button" className="text-sm underline w-fit">Selecionar imagem</button>}
+          onSelect={(m) => setValue("image_url", m.url)}
+        />
+        <MediaPicker
+          type="video"
+          trigger={<button type="button" className="text-sm underline w-fit">Selecionar vídeo</button>}
+          onSelect={(m) => setValue("video_url", m.url)}
+        />
+        <MediaPicker
+          type="documento"
+          trigger={<button type="button" className="text-sm underline w-fit">Selecionar documento (PDF)</button>}
+          onSelect={(m) => setValue("document_url", m.url)}
+        />
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="order_index">Ordem</Label>
+          <Input id="order_index" type="number" {...register("order_index", { valueAsNumber: true })} />
+        </div>
+        <StatusActionsBar
+          scheduledAt={null}
+          onAction={async (action, scheduledAt) => {
+            await onSave();
+            if (id) await setTrajetoriaStatus(id, action, scheduledAt);
+            router.push("/admin/trajetoria");
+          }}
+        />
+      </div>
+    </>
+  );
+}

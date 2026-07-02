@@ -8,7 +8,9 @@ export default function Home() {
         Portal público em construção — o conteúdo é gerenciado pelo painel
         administrativo.
       </p>
-      <Button render={<a href="/admin" />}>Acessar painel</Button>
+      <Button nativeButton={false} render={<a href="/admin" />}>
+        Acessar painel
+      </Button>
     </main>
   );
 }

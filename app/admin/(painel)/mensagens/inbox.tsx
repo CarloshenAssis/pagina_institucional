@@ -30,15 +30,20 @@ export function Inbox() {
     });
   }, [filter, search]);
 
+  // Exibir a mensagem no detalhe conta como leitura — inclusive a
+  // auto-selecionada ao abrir a página, não só a clicada.
+  useEffect(() => {
+    const msg = rows.find((r) => r.id === selectedId);
+    if (msg?.status === "nova") {
+      void markMessageStatus(msg.id, "lida");
+      setRows((prev) => prev.map((r) => (r.id === msg.id ? { ...r, status: "lida" } : r)));
+    }
+  }, [selectedId, rows]);
+
   const selected = rows.find((r) => r.id === selectedId);
 
-  async function select(id: string) {
+  function select(id: string) {
     setSelectedId(id);
-    const msg = rows.find((r) => r.id === id);
-    if (msg?.status === "nova") {
-      await markMessageStatus(id, "lida");
-      setRows((prev) => prev.map((r) => (r.id === id ? { ...r, status: "lida" } : r)));
-    }
   }
 
   return (

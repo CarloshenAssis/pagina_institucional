@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 
 type Action = "rascunho" | "despublicado" | "arquivado" | "publicar";
@@ -11,7 +12,10 @@ export function StatusActionsBar({
   scheduledAt: string | null;
   onAction: (action: Action, scheduledAt: string | null) => void;
 }) {
-  const isFutureScheduled = !!scheduledAt && new Date(scheduledAt).getTime() > Date.now();
+  // Capturado uma vez na montagem: a regra react-hooks/purity não permite
+  // Date.now() direto no render, e o rótulo só precisa de precisão de montagem.
+  const [renderedAt] = useState(() => Date.now());
+  const isFutureScheduled = !!scheduledAt && new Date(scheduledAt).getTime() > renderedAt;
 
   return (
     <div className="flex justify-between items-center">

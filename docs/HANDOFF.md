@@ -79,4 +79,10 @@ Plano de implementação: `docs/superpowers/plans/2026-07-01-portal-instituciona
 
 ## Próximo passo
 
-**Portal público** — plano novo em `docs/superpowers/plans/2026-07-02-portal-publico-plan.md` (29 tasks, fases P0–P8), já incorporando todos os desvios aprendidos. Começar pela Task 1 (tema dinâmico via CSS vars). Pendências de ambiente que entram na Fase P5 (contato): chaves do Cloudflare Turnstile + `SUPABASE_SERVICE_ROLE_KEY`.
+**Portal público** — plano em `docs/superpowers/plans/2026-07-02-portal-publico-plan.md` (29 tasks, P0–P8).
+
+- ✅ Task 1 (tema via CSS vars) e Task 2 (layout público + Header + Footer + nav com gate da Agenda) — verificadas no browser, incluindo menu mobile.
+- ▶ Continuar na Task 3 (SectionHeading/Reveal/RichText/VideoEmbed) e Task 4 (404).
+- Pendências de ambiente para a Fase P5 (contato): chaves Turnstile + `SUPABASE_SERVICE_ROLE_KEY`.
+
+> ⚠️ Lição operacional: **não rodar `npm run build` com o `next dev` ligado** — compartilham a `.next` e o dev passa a servir um prerender velho (páginas "congeladas" com dados errados). Se acontecer: matar a árvore inteira do dev (`pkill -f next-server` além do wrapper), `rm -rf .next` e subir de novo.

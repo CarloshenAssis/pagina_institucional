@@ -12,7 +12,8 @@ Plano de implementação: `docs/superpowers/plans/2026-07-01-portal-instituciona
 | 1 — Schema do banco (6 migrations aplicadas no Supabase hospedado) | ✅ concluída |
 | 2 — Auth (login + proxy.ts protegendo /admin) | ✅ concluída |
 | 3 — Shell do admin (Tasks 14–16, dashboard incluso) | ✅ concluída |
-| 4–11 | pendentes |
+| 4 — Engine genérico de módulo (Tasks 17–24) | ✅ concluída |
+| 5–11 | pendentes |
 
 > Task 16 verificada em 2026-07-02 no browser (guard de auth, login, 6 cards, 6 ações rápidas, badge de não lidas na sidebar). A verificação numa sessão cloud usou um mock local da API Supabase — ver "Sessões Claude Code na nuvem" abaixo. Os painéis de publicações/mensagens recentes ficaram para a Task 22, conforme o plano.
 
@@ -38,7 +39,10 @@ Plano de implementação: `docs/superpowers/plans/2026-07-01-portal-instituciona
 2. **shadcn/Base UI:** não existe `asChild` → usar `render={<Link .../>}` e `nativeButton={false}` em Button quando renderizar `<a>`.
 3. **`proxy.ts`** na raiz substitui `middleware.ts` (convenção nova do Next 16).
 4. **Vitest sem `@vitejs/plugin-react`** (conflito de peer deps com o pacote shadcn); o transform padrão do Vitest 4 (oxc) já compila TSX — o workaround antigo de `esbuild.jsx` foi removido do vitest.config.ts em 2026-07-02 (a opção era ignorada e quebrava o `tsc --noEmit`).
-5. Paleta da marca já mapeada nos tokens shadcn em `app/globals.css` (bg-primary = navy, bg-secondary = dourado, bg-background = bege, tokens de sidebar em navy). Utilitários extras: `text-gold`, `text-rose`, `font-display` (Fraunces), `font-sans` (DM Sans).
+5. **Factory de actions (Task 19):** `lib/content/actions.ts` NÃO leva `"use server"` (exporta factory síncrono e helper puro, proibidos como export nesses arquivos no Next 16). A fronteira `"use server"` fica nos `actions.ts` de cada módulo (Fase 5), que exportam wrappers async.
+6. **Tiptap v3** (o plano assumia v2): `Link` já vem no StarterKit (configurar via `StarterKit.configure({ link: ... })`); `Table/TableRow/TableCell/TableHeader` são exports nomeados de `@tiptap/extension-table`. Polyfills de geometria (getClientRects etc.) adicionados ao `vitest.setup.ts` para o ProseMirror rodar em jsdom.
+7. **Regra `react-hooks/purity` (Next 16):** proíbe `Date.now()` no render — capturar via `useState(() => Date.now())` (ver StatusActionsBar).
+8. Paleta da marca já mapeada nos tokens shadcn em `app/globals.css` (bg-primary = navy, bg-secondary = dourado, bg-background = bege, tokens de sidebar em navy). Utilitários extras: `text-gold`, `text-rose`, `font-display` (Fraunces), `font-sans` (DM Sans).
 
 ## Sessões Claude Code na nuvem (claude.ai/code)
 
@@ -48,4 +52,4 @@ Plano de implementação: `docs/superpowers/plans/2026-07-01-portal-instituciona
 
 ## Próximo passo
 
-Fase 4 — engine genérico de módulo (Tasks 17–24): começar pela Task 17 (`lib/content/slug.ts` + testes).
+Fase 5 — módulos de conteúdo (Tasks 25–30), começando pela Task 25 (módulo Trajetória). Atenção: a Fase 5 usa `react-hook-form` + `@hookform/resolvers`, que ainda não estão instalados.

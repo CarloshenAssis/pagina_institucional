@@ -18,7 +18,7 @@ interface Props<T extends { id: string; status: string }> {
 }
 
 const STATUS_BADGE: Record<string, string> = {
-  publicado: "bg-secondary text-primary",
+  publicado: "bg-secondary text-secondary-foreground",
   rascunho: "border border-primary/30 text-primary",
   agendado: "bg-accent/20 text-primary",
   despublicado: "text-muted-foreground",
@@ -41,7 +41,7 @@ export function ContentTable<T extends { id: string; status: string }>({
   );
 
   return (
-    <div className="bg-white border">
+    <div className="bg-card border">
       <div className="p-4 border-b">
         <Input
           placeholder="Pesquisar..."

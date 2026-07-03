@@ -64,7 +64,7 @@ export function ProjetoForm({ id, initial }: { id: string | null; initial?: Part
         </div>
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="project_stage">Fase do projeto</Label>
-          <select id="project_stage" className="border p-2.5 text-sm bg-white" {...register("project_stage")}>
+          <select id="project_stage" className="border p-2.5 text-sm bg-card" {...register("project_stage")}>
             <option value="proposto">Proposto</option>
             <option value="em_andamento">Em andamento</option>
             <option value="concluido">Concluído</option>

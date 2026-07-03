@@ -116,7 +116,7 @@ export function MediaGallery() {
         ) : (
           <div className="grid grid-cols-5 gap-4">
             {filtered.map((item) => (
-              <div key={item.id} className="bg-white border">
+              <div key={item.id} className="bg-card border">
                 <div className="h-28 bg-background overflow-hidden flex items-center justify-center">
                   {item.type === "imagem" ? (
                     <Image src={item.url} alt={item.filename} width={200} height={112} className="object-cover w-full h-full" unoptimized />

@@ -28,7 +28,7 @@ export function HeroForm({ initial }: { initial: Partial<HeroInput> }) {
   return (
     <form
       onSubmit={handleSubmit(async (data) => saveHero(data))}
-      className="max-w-3xl flex flex-col gap-4 bg-white border p-6"
+      className="max-w-3xl flex flex-col gap-4 bg-card border p-6"
     >
       <span className="text-xs font-bold uppercase text-muted-foreground">Hero (banner principal)</span>
       <div className="flex items-center gap-3">

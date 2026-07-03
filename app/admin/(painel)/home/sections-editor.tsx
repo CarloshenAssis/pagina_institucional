@@ -18,7 +18,7 @@ export function HomeSectionsEditor({
   const byKey = Object.fromEntries(sections.map((s) => [s.key, s.name]));
 
   return (
-    <div className="bg-white border">
+    <div className="bg-card border">
       {order.map((key, index) => (
         <div key={key} className="grid grid-cols-[40px_2fr_1fr_1fr] px-6 py-4 border-t items-center">
           <span className="text-sm text-muted-foreground font-bold">{index + 1}</span>

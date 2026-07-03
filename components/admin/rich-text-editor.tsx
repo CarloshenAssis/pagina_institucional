@@ -39,7 +39,7 @@ export function RichTextEditor({
       type="button"
       title={title}
       onClick={action}
-      className={`w-8 h-8 text-sm ${active ? "bg-primary text-white" : ""}`}
+      className={`w-8 h-8 text-sm ${active ? "bg-primary text-primary-foreground" : ""}`}
     >
       {label}
     </button>

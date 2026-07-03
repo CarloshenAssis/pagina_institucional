@@ -11,8 +11,8 @@ function itemClasses(active: boolean) {
   return cn(
     "flex items-center gap-3 px-6 py-2.5 text-sm font-medium border-l-2",
     active
-      ? "text-white bg-white/5 border-secondary"
-      : "text-white/55 border-transparent hover:text-white/80"
+      ? "text-sidebar-foreground bg-sidebar-accent border-secondary"
+      : "text-sidebar-foreground/55 border-transparent hover:text-sidebar-foreground/80"
   );
 }
 
@@ -34,18 +34,18 @@ export function Sidebar({ unreadCount = 0 }: { unreadCount?: number }) {
       />
       <nav
         className={cn(
-          "fixed inset-y-0 left-0 z-40 w-64 bg-primary flex flex-col py-6 overflow-y-auto transition-transform duration-200 ease-out",
+          "fixed inset-y-0 left-0 z-40 w-64 bg-sidebar text-sidebar-foreground flex flex-col py-6 overflow-y-auto transition-transform duration-200 ease-out",
           "md:static md:z-auto md:w-60 md:shrink-0 md:translate-x-0",
           menuOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
-        <div className="px-6 pb-5 mb-3 border-b border-white/10">
-          <span className="font-display font-semibold text-white">Painel</span>
+        <div className="px-6 pb-5 mb-3 border-b border-sidebar-border">
+          <span className="font-display font-semibold text-sidebar-foreground">Painel</span>
         </div>
         {NAV_SECTIONS.map((section) => (
           <div key={section.label ?? "root"}>
             {section.label && (
-              <span className="px-6 pt-4 pb-1.5 block text-[10px] font-bold tracking-wide uppercase text-white/35">
+              <span className="px-6 pt-4 pb-1.5 block text-[10px] font-bold tracking-wide uppercase text-sidebar-foreground/35">
                 {section.label}
               </span>
             )}
@@ -66,7 +66,7 @@ export function Sidebar({ unreadCount = 0 }: { unreadCount?: number }) {
             ))}
           </div>
         ))}
-        <div className="mt-auto pt-3 border-t border-white/10">
+        <div className="mt-auto pt-3 border-t border-sidebar-border">
           <Link href="/admin/perfil" onClick={closeMenu} className={itemClasses(isActive("/admin/perfil"))}>
             Perfil
           </Link>

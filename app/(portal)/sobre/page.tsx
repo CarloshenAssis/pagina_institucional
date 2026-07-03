@@ -42,12 +42,31 @@ export default async function SobrePage() {
         </div>
       </Reveal>
 
+      {(sobre?.mission_text || sobre?.vision_text) && (
+        <Reveal>
+          <div className="grid gap-8 md:grid-cols-2">
+            {sobre?.mission_text && (
+              <div>
+                <SectionHeading eyebrow="Propósito" title="Missão" />
+                <p className="text-foreground/80 whitespace-pre-line">{sobre.mission_text}</p>
+              </div>
+            )}
+            {sobre?.vision_text && (
+              <div>
+                <SectionHeading eyebrow="Horizonte" title="Visão" />
+                <p className="text-foreground/80 whitespace-pre-line">{sobre.vision_text}</p>
+              </div>
+            )}
+          </div>
+        </Reveal>
+      )}
+
       {values.length > 0 && (
         <Reveal>
           <SectionHeading eyebrow="Princípios" title="Valores" />
           <ul className="grid gap-4 md:grid-cols-3">
             {values.map((v, i) => (
-              <li key={i} className="bg-white border p-5 font-display text-lg text-primary">
+              <li key={i} className="bg-card border p-5 font-display text-lg text-primary">
                 {v}
               </li>
             ))}

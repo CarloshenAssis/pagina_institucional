@@ -88,11 +88,15 @@ Plano de implementação: `docs/superpowers/plans/2026-07-01-portal-instituciona
 - ✅ Fase P4 (listagens+detalhes dos 4 módulos com filtro de categoria/paginação/estados vazios; /agenda com gate global e mapa por evento) — 16 checks E2E.
 - ✅ Fase P5 (/contato: form Turnstile-ready, desabilitado com aviso até existirem `NEXT_PUBLIC_TURNSTILE_SITE_KEY` + `TURNSTILE_SECRET_KEY` + `SUPABASE_SERVICE_ROLE_KEY` no ambiente) e P6 (/pesquisa agrupada + busca no header) — 10 checks E2E.
 - ✅ Fase P7 (SEO): `generateMetadata` em todas as páginas públicas (`lib/content/seo.ts` → `itemMetadata`, sobrepõe `seo jsonb` do item ao padrão das Configurações; OG image reaproveita a capa); `app/sitemap.ts` dinâmico (rotas estáticas + slugs publicados via client anon puro); `app/robots.ts` (libera tudo exceto `/admin`); JSON-LD (`lib/content/jsonld.ts` + `components/portal/json-ld.tsx`) — `NewsArticle` no detalhe de notícia, `Event` nos cards da Agenda. `next.config.ts` ganhou `images.remotePatterns` para o bucket do Supabase Storage (obrigatório para `next/image` aceitar essas URLs). 12 testes novos, commit `29a063a`.
-- ▶ Continuar na Fase P8 (Tasks 28–29: verificação E2E completa — fluxo admin→portal, tema dinâmico refletindo, mobile sem overflow — e deploy/smoke test em produção).
-- **Fluxo real do formulário de contato ainda não testado de ponta a ponta** — depende das chaves acima; ao configurá-las (Vercel + local), testar envio, honeypot e rate limit.
+### Ações pendentes (em ordem de prioridade)
+
+1. **🔴 Mobile — pedir o protótipo ao Carlos primeiro.** Ele disse ter feito um design mobile e pediu para aplicá-lo ("da melhor maneira"), mas **o arquivo nunca chegou a nenhuma sessão** — nada em anexo, nada no repo. Feedback original (2026-07-02): layout mobile atual "bem quebrado". Não inventar layout mobile sem o protótipo — perguntar antes. Depois de recebido, aplicar em todas as páginas públicas de uma vez (desktop-first foi mantido intacto até lá).
+2. Fase P8 (Tasks 28–29): verificação E2E completa (fluxo admin→portal, tema dinâmico refletindo, mobile sem overflow — depende do item 1) e deploy/smoke test em produção.
+3. **Formulário de contato ainda não testado de ponta a ponta** — depende de `NEXT_PUBLIC_TURNSTILE_SITE_KEY` + `TURNSTILE_SECRET_KEY` + `SUPABASE_SERVICE_ROLE_KEY` (Vercel + `.env.local`). Ao configurar, testar envio, honeypot e rate limit.
+
+### Lembretes fixos
+
 - **Requisito de entrega (Carlos, 2026-07-02): o site vai VAZIO para produção** — nunca semear conteúdo no banco real; dados de teste só no mock local. Estados vazios elegantes em todas as páginas públicas (feito na P4). Banco real conferido em 2026-07-02: 0 linhas em todas as tabelas de conteúdo.
-- **Mobile:** o Carlos vai fornecer o design de celular depois (feedback de 2026-07-02: layout mobile atual "bem quebrado"). Até lá, desenvolver desktop-first sem polir mobile; quando o design chegar, aplicar em todas as páginas de uma vez.
-- Pendências de ambiente para a Fase P5 (contato): chaves Turnstile + `SUPABASE_SERVICE_ROLE_KEY`.
 - Senha do admin foi redefinida em 2026-07-02 a pedido do Carlos (temporária, passada no chat — ele deve trocá-la em /admin/perfil).
 
 > ⚠️ Lição operacional: **não rodar `npm run build` com o `next dev` ligado** — compartilham a `.next` e o dev passa a servir um prerender velho (páginas "congeladas" com dados errados). Se acontecer: matar a árvore inteira do dev (`pkill -f next-server` além do wrapper), `rm -rf .next` e subir de novo.

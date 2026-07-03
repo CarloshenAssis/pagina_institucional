@@ -17,7 +17,13 @@ const contactSchema = z.object({
 
 export async function submitContactForm(input: unknown, ip: string) {
   const parsed = contactSchema.safeParse(input);
-  if (!parsed.success) return { error: "Dados inválidos." };
+  if (!parsed.success) {
+    const failed = parsed.error.issues.map((i) => i.path.join("."));
+    if (failed.includes("turnstileToken")) {
+      return { error: "Aguarde a verificação de segurança concluir e tente novamente." };
+    }
+    return { error: "Dados inválidos." };
+  }
 
   const verified = await verifyTurnstile(parsed.data.turnstileToken);
   if (!verified) return { error: "Falha na verificação anti-spam." };

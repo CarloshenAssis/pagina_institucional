@@ -1,11 +1,24 @@
-import DOMPurify from "isomorphic-dompurify";
+import sanitizeHtml from "sanitize-html";
 
 // Renderiza o HTML produzido pelo Tiptap no admin. O conteúdo vem do banco
 // (autor confiável), mas sanitizamos mesmo assim — defesa em profundidade.
+// sanitize-html (sem DOM/jsdom) no lugar de isomorphic-dompurify: jsdom
+// quebrava o bundle serverless da Vercel (500 em produção, funcionava local).
+const ALLOWED_TAGS = [
+  "p", "br", "hr", "strong", "b", "em", "i", "u", "s", "code", "pre",
+  "h1", "h2", "h3", "h4", "h5", "h6",
+  "ul", "ol", "li", "blockquote", "a", "img",
+  "table", "thead", "tbody", "tr", "th", "td",
+];
+
 export function RichText({ html, className = "" }: { html: string; className?: string }) {
-  const clean = DOMPurify.sanitize(html, {
-    USE_PROFILES: { html: true },
-    FORBID_TAGS: ["style", "form", "input"],
+  const clean = sanitizeHtml(html, {
+    allowedTags: ALLOWED_TAGS,
+    allowedAttributes: {
+      a: ["href", "target", "rel"],
+      img: ["src", "alt"],
+    },
+    allowedSchemes: ["http", "https", "mailto"],
   });
   return (
     <div

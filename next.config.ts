@@ -1,10 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // isomorphic-dompurify usa jsdom internamente; jsdom já é externalizado por
-  // padrão pelo Next, mas isomorphic-dompurify não — esse descompasso quebra
-  // o file-tracing da Vercel (funciona local, 500 no bundle serverless).
-  serverExternalPackages: ["isomorphic-dompurify"],
   images: {
     remotePatterns: [
       {

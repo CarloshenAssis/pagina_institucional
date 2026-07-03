@@ -1,3 +1,5 @@
+export const metadata = { title: "Notícias" };
+
 import { listPublished, listPublicCategories } from "@/lib/content/public-queries";
 import { totalPages } from "@/lib/content/pagination";
 import { SectionHeading } from "@/components/portal/section-heading";

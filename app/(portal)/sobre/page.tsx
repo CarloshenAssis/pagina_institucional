@@ -1,3 +1,5 @@
+export const metadata = { title: "Sobre" };
+
 import { createClient } from "@/lib/supabase/server";
 import { SectionHeading } from "@/components/portal/section-heading";
 import { RichText } from "@/components/portal/rich-text";

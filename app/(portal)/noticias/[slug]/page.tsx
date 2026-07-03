@@ -1,9 +1,18 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getPublishedBySlug } from "@/lib/content/public-queries";
+import { itemMetadata } from "@/lib/content/seo";
+import { newsArticleJsonLd } from "@/lib/content/jsonld";
+import { JsonLd } from "@/components/portal/json-ld";
 import { RichText } from "@/components/portal/rich-text";
 import { VideoEmbed } from "@/components/portal/video-embed";
 import { SocialShareButtons } from "@/components/admin/social-share-buttons";
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const item = await getPublishedBySlug("news", slug);
+  return item ? itemMetadata(item) : {};
+}
 
 export default async function NoticiaDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -14,6 +23,7 @@ export default async function NoticiaDetailPage({ params }: { params: Promise<{ 
 
   return (
     <article className="mx-auto max-w-3xl px-5 py-16 flex flex-col gap-8">
+      <JsonLd data={newsArticleJsonLd(noticia, process.env.NEXT_PUBLIC_SITE_URL ?? "")} />
       <header className="flex flex-col gap-3">
         <div className="flex gap-3 items-center text-[11px] font-bold uppercase tracking-wide">
           {noticia.category_name && <span className="text-gold">{noticia.category_name}</span>}

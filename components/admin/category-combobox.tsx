@@ -26,7 +26,7 @@ export function CategoryCombobox({
       <select
         value={value ?? ""}
         onChange={(e) => onChange(e.target.value)}
-        className="border p-2.5 text-sm bg-white"
+        className="border p-2.5 text-sm bg-card"
       >
         <option value="">Selecionar categoria...</option>
         {options.map((o) => (

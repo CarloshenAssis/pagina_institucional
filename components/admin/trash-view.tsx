@@ -13,7 +13,7 @@ export function TrashView<T extends { id: string; deleted_at: string | null }>({
     return <p className="py-16 text-center text-sm text-muted-foreground">A lixeira está vazia.</p>;
   }
   return (
-    <div className="bg-white border">
+    <div className="bg-card border">
       {rows.map((row) => (
         <div key={row.id} className="flex justify-between items-center px-6 py-4 border-t">
           <span>{String(row[titleKey])}</span>

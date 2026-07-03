@@ -81,8 +81,11 @@ Plano de implementação: `docs/superpowers/plans/2026-07-01-portal-instituciona
 
 **Portal público** — plano em `docs/superpowers/plans/2026-07-02-portal-publico-plan.md` (29 tasks, P0–P8).
 
-- ✅ Task 1 (tema via CSS vars) e Task 2 (layout público + Header + Footer + nav com gate da Agenda) — verificadas no browser, incluindo menu mobile.
-- ▶ Continuar na Task 3 (SectionHeading/Reveal/RichText/VideoEmbed) e Task 4 (404).
+- ✅ Fase P0 completa (tema, layout, Header/Footer, componentes de marca, VideoEmbed híbrido, 404).
+- ✅ Fase P1 (Task 5: consultas públicas com paginação/categoria).
+- ✅ Fase P2 (Tasks 6–14: Home completa com as 8 seções, verificada no browser + mobile).
+- ▶ Continuar na Fase P3 (Task 15: /sobre; Task 16: /trajetoria).
 - Pendências de ambiente para a Fase P5 (contato): chaves Turnstile + `SUPABASE_SERVICE_ROLE_KEY`.
+- Senha do admin foi redefinida em 2026-07-02 a pedido do Carlos (temporária, passada no chat — ele deve trocá-la em /admin/perfil).
 
 > ⚠️ Lição operacional: **não rodar `npm run build` com o `next dev` ligado** — compartilham a `.next` e o dev passa a servir um prerender velho (páginas "congeladas" com dados errados). Se acontecer: matar a árvore inteira do dev (`pkill -f next-server` além do wrapper), `rm -rf .next` e subir de novo.

@@ -35,6 +35,15 @@ export function Header({ siteName, logoUrl, items }: { siteName: string; logoUrl
         </Link>
 
         <nav className="hidden lg:flex items-center gap-6">
+          <form action="/pesquisa" role="search">
+            <input
+              type="search"
+              name="q"
+              placeholder="Buscar…"
+              aria-label="Buscar no portal"
+              className="w-32 focus:w-48 transition-all border-b border-primary/30 bg-transparent px-1 py-1 text-sm outline-none"
+            />
+          </form>
           {items
             .filter((i) => i.href !== "/contato")
             .map((i) => (

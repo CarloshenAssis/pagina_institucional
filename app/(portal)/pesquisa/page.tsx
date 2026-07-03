@@ -1,3 +1,5 @@
+export const metadata = { title: "Pesquisa" };
+
 import Link from "next/link";
 import { searchAll } from "@/lib/content/search-server";
 import { SectionHeading } from "@/components/portal/section-heading";

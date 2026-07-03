@@ -1,6 +1,15 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "wbbqnbrhulasdttgapqw.supabase.co",
+        pathname: "/storage/v1/object/public/**",
+      },
+    ],
+  },
   // Fallbacks APENAS para valores públicos (a anon key é pública por design —
   // é enviada ao browser e o RLS protege os dados). Permitem deploy na Vercel
   // sem configurar env vars no dashboard; qualquer env definida lá ou em

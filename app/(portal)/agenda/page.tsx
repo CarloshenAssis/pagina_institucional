@@ -1,5 +1,9 @@
+export const metadata = { title: "Agenda" };
+
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { eventJsonLd } from "@/lib/content/jsonld";
+import { JsonLd } from "@/components/portal/json-ld";
 import { SectionHeading } from "@/components/portal/section-heading";
 import { EmptyState } from "@/components/portal/listing";
 import { Reveal } from "@/components/portal/reveal";
@@ -99,7 +103,10 @@ export default async function AgendaPage() {
         ) : (
           <div className="flex flex-col gap-6">
             {(proximos ?? []).map((e) => (
-              <EventBlock key={e.id} event={e} />
+              <div key={e.id}>
+                <JsonLd data={eventJsonLd(e)} />
+                <EventBlock event={e} />
+              </div>
             ))}
           </div>
         )}

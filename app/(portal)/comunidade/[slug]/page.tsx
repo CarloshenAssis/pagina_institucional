@@ -1,6 +1,13 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getPublishedBySlug } from "@/lib/content/public-queries";
+import { itemMetadata } from "@/lib/content/seo";
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const item = await getPublishedBySlug("albuns", slug);
+  return item ? itemMetadata(item) : {};
+}
 import { VideoEmbed } from "@/components/portal/video-embed";
 
 export default async function AlbumDetailPage({ params }: { params: Promise<{ slug: string }> }) {

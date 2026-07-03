@@ -1,3 +1,5 @@
+export const metadata = { title: "Comunidade" };
+
 import Link from "next/link";
 import { listPublished, listPublicCategories } from "@/lib/content/public-queries";
 import { totalPages } from "@/lib/content/pagination";

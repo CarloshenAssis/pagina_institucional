@@ -1,3 +1,5 @@
+export const metadata = { title: "Trajetória" };
+
 import { createClient } from "@/lib/supabase/server";
 import { SectionHeading } from "@/components/portal/section-heading";
 import { VideoEmbed } from "@/components/portal/video-embed";

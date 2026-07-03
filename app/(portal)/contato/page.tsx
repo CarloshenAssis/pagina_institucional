@@ -1,3 +1,5 @@
+export const metadata = { title: "Contato" };
+
 import { createClient } from "@/lib/supabase/server";
 import { settingsToRecord } from "@/app/admin/(painel)/configuracoes/settings-utils";
 import { SectionHeading } from "@/components/portal/section-heading";

@@ -1,6 +1,6 @@
 # Handoff — continuar em outra máquina
 
-**Última atualização:** 2026-07-02
+**Última atualização:** 2026-07-03 (sessão em andamento — ver nota no fim sobre reinício pendente)
 
 ## Estado do projeto
 
@@ -73,8 +73,31 @@ Plano de implementação: `docs/superpowers/plans/2026-07-01-portal-instituciona
 - `categoryNameSchema` em `lib/validations/category.ts` (irmão), consumido por `app/admin/category-actions.ts`.
 - Componentes compartilhados novos: `MediaListField` (galerias), `CategoryCombobox`, `SocialShareButtons`.
 
+## Épico do admin: CONCLUÍDO (2026-07-02)
+
+40/40 tasks, merge na `main` (commit 7032655), deploy na Vercel feito pelo Carlos via import do repo. Pós-deploy pendente: conferir a URL de produção, cadastrá-la no Supabase Auth (Site URL/Redirect) e ajustar `NEXT_PUBLIC_SITE_URL` — ver `docs/deploy.md`.
+
 ## Próximo passo
 
-1. **Deploy (ação manual do Carlos):** vercel.com/new → Import Git Repository → `CarloshenAssis/pagina_institucional` → Deploy. Sem configuração extra (framework auto-detectado; env públicas têm fallback no next.config). Ver `docs/deploy.md` para o pós-deploy.
-2. Decidir o branch de produção: fazer merge de `claude/project-visibility-v7het6` na `main` (a `main` está desatualizada — todo o trabalho vive no branch).
-3. Próximo épico: **portal público** (o site que os visitantes veem) — plano próprio, fora do plano do admin.
+**Portal público** — plano em `docs/superpowers/plans/2026-07-02-portal-publico-plan.md` (29 tasks, P0–P8).
+
+- ✅ Fase P0 completa (tema, layout, Header/Footer, componentes de marca, VideoEmbed híbrido, 404).
+- ✅ Fase P1 (Task 5: consultas públicas com paginação/categoria).
+- ✅ Fase P2 (Tasks 6–14: Home completa com as 8 seções, verificada no browser + mobile).
+- ✅ Fase P3 (/sobre com valores/vídeo/galeria/PDFs; /trajetoria com linha do tempo; 404 via catch-all no grupo — not-found de route group não captura URL desconhecida sozinho).
+- ✅ Fase P4 (listagens+detalhes dos 4 módulos com filtro de categoria/paginação/estados vazios; /agenda com gate global e mapa por evento) — 16 checks E2E.
+- ✅ Fase P5 (/contato: form Turnstile-ready, desabilitado com aviso até existirem `NEXT_PUBLIC_TURNSTILE_SITE_KEY` + `TURNSTILE_SECRET_KEY` + `SUPABASE_SERVICE_ROLE_KEY` no ambiente) e P6 (/pesquisa agrupada + busca no header) — 10 checks E2E.
+- ✅ Fase P7 (SEO): `generateMetadata` em todas as páginas públicas (`lib/content/seo.ts` → `itemMetadata`, sobrepõe `seo jsonb` do item ao padrão das Configurações; OG image reaproveita a capa); `app/sitemap.ts` dinâmico (rotas estáticas + slugs publicados via client anon puro); `app/robots.ts` (libera tudo exceto `/admin`); JSON-LD (`lib/content/jsonld.ts` + `components/portal/json-ld.tsx`) — `NewsArticle` no detalhe de notícia, `Event` nos cards da Agenda. `next.config.ts` ganhou `images.remotePatterns` para o bucket do Supabase Storage (obrigatório para `next/image` aceitar essas URLs). 12 testes novos, commit `29a063a`.
+### Ações pendentes (em ordem de prioridade)
+
+1. ✅ **Mobile (2026-07-03):** protótipo do Carlos recebido (mockups `Mobile.dc.html`/`AdminMobile.dc.html` simulando iPhone, marca placeholder "Helena Duarte") — padrão de referência: header sticky com hamburger→drawer, busca no drawer, seções empilhadas, no admin: topbar+hamburger→drawer agrupado (Dashboard/Conteúdo/Sistema), tabs com scroll horizontal, listas em cards. Auditoria mostrou que o **portal público já era responsivo** (Header/Footer/Home/listagens com breakpoints `md:`/`lg:` corretos) — só faltava busca no menu mobile (adicionada) e botão do form de contato full-width no mobile (ajustado). O **painel admin era desktop-only e quebrava abaixo de ~1024px** (sidebar fixa de 240px sem colapsar, sem hamburger) — convertido para drawer via novo `lib/admin/nav-context.tsx` (`AdminNavProvider`/`useAdminNav`), `Sidebar` (drawer fixed + overlay abaixo de `md`, estático em `md+`) e `Topbar` (botão hamburger). `ContentTable` (listas de módulo) reflowa para cards com labels inline abaixo de `md` em vez de grid fixo ilegível. Tabs de Configurações/Mídias com `overflow-x-auto`. Verificado com Playwright headless em viewport 390×844 (rota de preview temporária fora de `/admin`, removida após o teste — auth real não foi tocada). Commit `0b43bde`.
+2. ✅ **Fase P8 — Task 27 (2026-07-03):** todas as imagens do portal público (`<img>`) trocadas por `next/image` (`fill`+`sizes`) em cards, hero, sobre, trajetória, comunidade e detalhes dos 4 módulos; `remotePatterns` do bucket Supabase já existia desde a P7. Build+typecheck+107 testes verdes, 0 erros de console via Playwright. Commit `6523419`.
+3. ⚠️ **Fase P8 — Task 28 (E2E completo) e Task 29 (deploy/smoke test): EM ABERTO, bloqueadas por rede.** O admin já foi importado na Vercel e está no ar em **https://pagina-institucional-chi.vercel.app/** (Carlos confirmou em 2026-07-03), mas essa sessão cloud não alcança nem esse domínio nem `*.supabase.co` — o proxy da sessão bloqueia por padrão. Carlos tentou liberar `vercel.app`/`supabase.co` na allowlist de rede (claude.ai/code → Environments) mas a policy não propagou na sessão corrente (`curl $HTTPS_PROXY/__agentproxy/status` seguiu sem os domínios no `noProxy`) — **decisão: reiniciar a sessão** para a nova allowlist valer. **Continuar a partir daqui:** confirmar que a allowlist já vale (repetir o `curl .../status`) e então: (a) rodar o smoke test das rotas públicas + `/admin/login` na URL de produção, (b) publicar/despublicar um item de teste no admin de produção e conferir que aparece/some no portal, (c) mudar uma cor no tema (Configurações) e conferir que reflete no portal, (d) checar mobile 375px sem overflow direto na URL real. Nota: a conta Vercel conectada ao MCP desta sessão (`Carlos' projects` / `team_OQLoPm6K9EKXSfGtlNwH8KzS`) só lista o projeto `cnpjtrack` — o deployment do portal não aparece nela (provavelmente está numa conta pessoal separada), então a validação via `mcp__Vercel__*` não funciona; usar `curl`/Playwright direto na URL depois que a rede estiver liberada.
+4. **Formulário de contato ainda não testado de ponta a ponta** — depende de `NEXT_PUBLIC_TURNSTILE_SITE_KEY` + `TURNSTILE_SECRET_KEY` + `SUPABASE_SERVICE_ROLE_KEY` (Vercel + `.env.local`). Ao configurar, testar envio, honeypot e rate limit.
+
+### Lembretes fixos
+
+- **Requisito de entrega (Carlos, 2026-07-02): o site vai VAZIO para produção** — nunca semear conteúdo no banco real; dados de teste só no mock local. Estados vazios elegantes em todas as páginas públicas (feito na P4). Banco real conferido em 2026-07-02: 0 linhas em todas as tabelas de conteúdo.
+- Senha do admin foi redefinida em 2026-07-02 a pedido do Carlos (temporária, passada no chat — ele deve trocá-la em /admin/perfil).
+
+> ⚠️ Lição operacional: **não rodar `npm run build` com o `next dev` ligado** — compartilham a `.next` e o dev passa a servir um prerender velho (páginas "congeladas" com dados errados). Se acontecer: matar a árvore inteira do dev (`pkill -f next-server` além do wrapper), `rm -rf .next` e subir de novo.

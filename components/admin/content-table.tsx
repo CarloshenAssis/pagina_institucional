@@ -50,27 +50,41 @@ export function ContentTable<T extends { id: string; status: string }>({
           className="max-w-xs"
         />
       </div>
-      <div className="grid grid-cols-[2fr_1fr_1fr_1fr] px-6 py-3 bg-background text-[10.5px] font-bold uppercase text-muted-foreground">
+      <div className="hidden md:grid md:grid-cols-[2fr_1fr_1fr_1fr] px-6 py-3 bg-background text-[10.5px] font-bold uppercase text-muted-foreground">
         <span>Título</span>
         {columns.map((c) => (
           <span key={c.key}>{c.label}</span>
         ))}
       </div>
       {filtered.map((row) => (
-        <div key={row.id} className="grid grid-cols-[2fr_1fr_1fr_1fr] px-6 py-4 border-t items-center">
+        <div
+          key={row.id}
+          className="flex flex-col gap-2.5 px-4 py-4 border-t md:grid md:grid-cols-[2fr_1fr_1fr_1fr] md:items-center md:gap-0 md:px-6"
+        >
           <span className="font-semibold">{String(row[titleKey])}</span>
           {columns.map((c) => {
             if (c.key === "status") {
               return (
-                <span
-                  key="status"
-                  className={`text-[11px] font-bold uppercase w-fit px-2.5 py-1 ${STATUS_BADGE[row.status]}`}
-                >
-                  {row.status}
+                <span key="status" className="flex items-center gap-2 md:block">
+                  <span className="text-[10px] font-bold uppercase text-muted-foreground md:hidden">
+                    {c.label}
+                  </span>
+                  <span
+                    className={`text-[11px] font-bold uppercase w-fit px-2.5 py-1 ${STATUS_BADGE[row.status]}`}
+                  >
+                    {row.status}
+                  </span>
                 </span>
               );
             }
-            return <span key={c.key}>{String(row[c.key] ?? "—")}</span>;
+            return (
+              <span key={c.key} className="flex items-center gap-2 md:block">
+                <span className="text-[10px] font-bold uppercase text-muted-foreground md:hidden">
+                  {c.label}
+                </span>
+                <span>{String(row[c.key] ?? "—")}</span>
+              </span>
+            );
           })}
           {confirmingId === row.id ? (
             <div className="flex gap-2.5 items-center">

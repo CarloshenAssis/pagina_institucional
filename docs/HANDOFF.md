@@ -84,7 +84,9 @@ Plano de implementação: `docs/superpowers/plans/2026-07-01-portal-instituciona
 - ✅ Fase P0 completa (tema, layout, Header/Footer, componentes de marca, VideoEmbed híbrido, 404).
 - ✅ Fase P1 (Task 5: consultas públicas com paginação/categoria).
 - ✅ Fase P2 (Tasks 6–14: Home completa com as 8 seções, verificada no browser + mobile).
-- ▶ Continuar na Fase P3 (Task 15: /sobre; Task 16: /trajetoria).
+- ✅ Fase P3 (/sobre com valores/vídeo/galeria/PDFs; /trajetoria com linha do tempo; 404 via catch-all no grupo — not-found de route group não captura URL desconhecida sozinho).
+- ▶ Continuar na Fase P4 (Tasks 17–21: listagens + detalhes de Projetos/Ideias/Notícias/Comunidade e /agenda).
+- **Mobile:** o Carlos vai fornecer o design de celular depois (feedback de 2026-07-02: layout mobile atual "bem quebrado"). Até lá, desenvolver desktop-first sem polir mobile; quando o design chegar, aplicar em todas as páginas de uma vez.
 - Pendências de ambiente para a Fase P5 (contato): chaves Turnstile + `SUPABASE_SERVICE_ROLE_KEY`.
 - Senha do admin foi redefinida em 2026-07-02 a pedido do Carlos (temporária, passada no chat — ele deve trocá-la em /admin/perfil).
 

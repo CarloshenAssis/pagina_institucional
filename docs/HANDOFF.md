@@ -86,7 +86,9 @@ Plano de implementação: `docs/superpowers/plans/2026-07-01-portal-instituciona
 - ✅ Fase P2 (Tasks 6–14: Home completa com as 8 seções, verificada no browser + mobile).
 - ✅ Fase P3 (/sobre com valores/vídeo/galeria/PDFs; /trajetoria com linha do tempo; 404 via catch-all no grupo — not-found de route group não captura URL desconhecida sozinho).
 - ✅ Fase P4 (listagens+detalhes dos 4 módulos com filtro de categoria/paginação/estados vazios; /agenda com gate global e mapa por evento) — 16 checks E2E.
-- ▶ Continuar na Fase P5 (Task 22: /contato — formulário com Turnstile; renderizar desabilitado com aviso enquanto faltarem as chaves).
+- ✅ Fase P5 (/contato: form Turnstile-ready, desabilitado com aviso até existirem `NEXT_PUBLIC_TURNSTILE_SITE_KEY` + `TURNSTILE_SECRET_KEY` + `SUPABASE_SERVICE_ROLE_KEY` no ambiente) e P6 (/pesquisa agrupada + busca no header) — 10 checks E2E.
+- ▶ Continuar na Fase P7 (SEO: generateMetadata, sitemap, robots, JSON-LD) e P8 (verificação final + deploy).
+- **Fluxo real do formulário de contato ainda não testado de ponta a ponta** — depende das chaves acima; ao configurá-las (Vercel + local), testar envio, honeypot e rate limit.
 - **Requisito de entrega (Carlos, 2026-07-02): o site vai VAZIO para produção** — nunca semear conteúdo no banco real; dados de teste só no mock local. Estados vazios elegantes em todas as páginas públicas (feito na P4). Banco real conferido em 2026-07-02: 0 linhas em todas as tabelas de conteúdo.
 - **Mobile:** o Carlos vai fornecer o design de celular depois (feedback de 2026-07-02: layout mobile atual "bem quebrado"). Até lá, desenvolver desktop-first sem polir mobile; quando o design chegar, aplicar em todas as páginas de uma vez.
 - Pendências de ambiente para a Fase P5 (contato): chaves Turnstile + `SUPABASE_SERVICE_ROLE_KEY`.

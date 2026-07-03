@@ -8,14 +8,13 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
 // O widget do Turnstile (renderização implícita) preenche um input oculto
-// name="cf-turnstile-response" dentro do form. Callbacks globais avisam quando
-// o token está pronto/expirou — o botão só habilita com token válido, senão o
-// envio chega ao servidor sem token e falha na validação ("Dados inválidos").
+// name="cf-turnstile-response" dentro do form quando o token fica pronto.
+// Fazemos polling desse input (à prova de callback que não dispara) e também
+// escutamos o error-callback para exibir o código de erro do Cloudflare — sem
+// token o envio falha na validação do servidor ("Dados inválidos").
 declare global {
   interface Window {
-    onTurnstileSuccess?: () => void;
-    onTurnstileExpired?: () => void;
-    onTurnstileError?: () => void;
+    onTurnstileError?: (code?: string) => void;
   }
 }
 
@@ -25,15 +24,25 @@ export function ContactForm({ siteKey, enabled }: { siteKey: string | null; enab
   const [tokenReady, setTokenReady] = useState(false);
 
   useEffect(() => {
-    window.onTurnstileSuccess = () => setTokenReady(true);
-    window.onTurnstileExpired = () => setTokenReady(false);
-    window.onTurnstileError = () => setTokenReady(false);
+    if (!enabled) return;
+    // Polling: quando o Cloudflare emite o token, ele popula o input oculto.
+    const id = setInterval(() => {
+      const el = document.querySelector<HTMLInputElement>('[name="cf-turnstile-response"]');
+      setTokenReady(Boolean(el && el.value));
+    }, 400);
+    window.onTurnstileError = (code) => {
+      setTokenReady(false);
+      setStatus("error");
+      setError(
+        `A verificação de segurança falhou${code ? ` (código ${code})` : ""}. ` +
+          `Verifique se o domínio deste site está autorizado no widget Turnstile ou recarregue a página.`
+      );
+    };
     return () => {
-      delete window.onTurnstileSuccess;
-      delete window.onTurnstileExpired;
+      clearInterval(id);
       delete window.onTurnstileError;
     };
-  }, []);
+  }, [enabled]);
 
   if (!enabled) {
     return (
@@ -121,8 +130,6 @@ export function ContactForm({ siteKey, enabled }: { siteKey: string | null; enab
           <div
             className="cf-turnstile"
             data-sitekey={siteKey}
-            data-callback="onTurnstileSuccess"
-            data-expired-callback="onTurnstileExpired"
             data-error-callback="onTurnstileError"
           />
         )}

@@ -21,6 +21,11 @@ const nextConfig: NextConfig = {
     NEXT_PUBLIC_SUPABASE_ANON_KEY:
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ??
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndiYnFuYnJodWxhc2R0dGdhcHF3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI5NDk0NjYsImV4cCI6MjA5ODUyNTQ2Nn0.I86fWok2JFIka4FhZ_up-cTudQjcalofwajDGsfduE0",
+    // Sem isso, sitemap.xml/robots.txt/JSON-LD caem no fallback "localhost:3000"
+    // hardcoded nesses arquivos, mesmo em produção — vira o domínio real da Vercel
+    // se NEXT_PUBLIC_SITE_URL não for setada no dashboard.
+    NEXT_PUBLIC_SITE_URL:
+      process.env.NEXT_PUBLIC_SITE_URL ?? "https://pagina-institucional-chi.vercel.app",
   },
 };
 

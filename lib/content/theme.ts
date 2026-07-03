@@ -16,7 +16,9 @@ const TOKEN_TO_VAR: [keyof ThemeRow, string][] = [
   ["text_secondary_color", "--muted-foreground"],
 ];
 
-const HEX = /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/;
+export const THEME_COLOR_KEYS: (keyof ThemeRow)[] = TOKEN_TO_VAR.map(([key]) => key);
+
+export const HEX = /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/;
 
 // Converte o registro de theme_settings em CSS custom properties.
 // Só emite cores hex válidas (o valor vem do banco e vai para um <style>

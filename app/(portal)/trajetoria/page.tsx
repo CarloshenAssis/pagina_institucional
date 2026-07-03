@@ -1,5 +1,6 @@
 export const metadata = { title: "Trajetória" };
 
+import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
 import { SectionHeading } from "@/components/portal/section-heading";
 import { VideoEmbed } from "@/components/portal/video-embed";
@@ -37,13 +38,9 @@ export default async function TrajetoriaPage() {
                 <h2 className="font-display text-2xl text-primary mt-1">{item.title}</h2>
                 {item.description && <p className="text-foreground/80 mt-2 max-w-2xl">{item.description}</p>}
                 {item.image_url && (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={item.image_url}
-                    alt={item.title}
-                    className="mt-4 w-full max-w-xl aspect-[3/2] object-cover"
-                    loading="lazy"
-                  />
+                  <div className="relative mt-4 w-full max-w-xl aspect-[3/2]">
+                    <Image src={item.image_url} alt={item.title} fill sizes="576px" className="object-cover" />
+                  </div>
                 )}
                 {item.video_url && (
                   <div className="mt-4 max-w-xl">

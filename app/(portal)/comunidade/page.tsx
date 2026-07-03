@@ -1,6 +1,7 @@
 export const metadata = { title: "Comunidade" };
 
 import Link from "next/link";
+import Image from "next/image";
 import { listPublished, listPublicCategories } from "@/lib/content/public-queries";
 import { totalPages } from "@/lib/content/pagination";
 import { SectionHeading } from "@/components/portal/section-heading";
@@ -30,14 +31,14 @@ export default async function ComunidadePage({
         <div className="grid gap-6 grid-cols-2 md:grid-cols-3">
           {rows.map((a) => (
             <Link key={a.id} href={`/comunidade/${a.slug}`} className="group flex flex-col bg-white border hover:shadow-lg transition-shadow">
-              <div className="aspect-square bg-primary/10 overflow-hidden">
+              <div className="relative aspect-square bg-primary/10 overflow-hidden">
                 {a.cover_url && (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
+                  <Image
                     src={a.cover_url}
                     alt={a.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                    loading="lazy"
+                    fill
+                    sizes="(min-width: 768px) 33vw, 50vw"
+                    className="object-cover group-hover:scale-105 transition-transform"
                   />
                 )}
               </div>

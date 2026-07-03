@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { getPublishedBySlug } from "@/lib/content/public-queries";
 import { itemMetadata } from "@/lib/content/seo";
 
@@ -28,8 +29,9 @@ export default async function IdeiaDetailPage({ params }: { params: Promise<{ sl
       </header>
 
       {ideia.cover_url && (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={ideia.cover_url} alt={ideia.title} className="w-full aspect-[3/2] object-cover" />
+        <div className="relative aspect-[3/2]">
+          <Image src={ideia.cover_url} alt={ideia.title} fill sizes="768px" className="object-cover" priority />
+        </div>
       )}
 
       {ideia.content && <RichText html={ideia.content} />}

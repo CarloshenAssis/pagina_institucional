@@ -1,11 +1,17 @@
 import Link from "next/link";
+import Image from "next/image";
 
 function CardImage({ src, alt }: { src: string | null; alt: string }) {
   return (
-    <div className="aspect-[3/2] bg-primary/10 overflow-hidden">
+    <div className="relative aspect-[3/2] bg-primary/10 overflow-hidden">
       {src && (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={src} alt={alt} className="w-full h-full object-cover" loading="lazy" />
+        <Image
+          src={src}
+          alt={alt}
+          fill
+          sizes="(min-width: 768px) 33vw, 100vw"
+          className="object-cover"
+        />
       )}
     </div>
   );

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { SectionHeading } from "./section-heading";
 import { Reveal } from "./reveal";
 import { ProjectCard, NewsCard, IdeaCard, EventCard } from "./cards";
@@ -41,12 +42,14 @@ export function HeroSection({ config }: { config: Record<string, string | null> 
           </div>
         </div>
         {config.hero_photo_url && (
-          <div className="relative">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+          <div className="relative aspect-[4/5] shadow-[24px_24px_0_0_rgba(0,0,0,0.25)]">
+            <Image
               src={config.hero_photo_url}
               alt=""
-              className="w-full aspect-[4/5] object-cover shadow-[24px_24px_0_0_rgba(0,0,0,0.25)]"
+              fill
+              sizes="(min-width: 768px) 50vw, 100vw"
+              className="object-cover"
+              priority
             />
           </div>
         )}
@@ -63,8 +66,9 @@ export function SobreSection({ sobre }: { sobre: { title: string | null; subtitl
       <Reveal>
         <div className="grid gap-10 md:grid-cols-[2fr_3fr] items-center">
           {sobre.photo_url && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={sobre.photo_url} alt="" className="w-full aspect-[4/5] object-cover" />
+            <div className="relative aspect-[4/5]">
+              <Image src={sobre.photo_url} alt="" fill sizes="(min-width: 768px) 40vw, 100vw" className="object-cover" />
+            </div>
           )}
           <div>
             <SectionHeading eyebrow="Sobre" title={sobre.title ?? "Sobre"} subtitle={sobre.subtitle ?? undefined} />
@@ -110,8 +114,13 @@ export function ComunidadeSection({ rows }: { rows: Row[] }) {
             {rows.map((a) => (
               <Link key={a.id} href={`/comunidade/${a.slug}`} className="group relative aspect-square bg-primary/10 overflow-hidden">
                 {typeof a.cover_url === "string" && a.cover_url && (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={a.cover_url} alt={String(a.title)} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                  <Image
+                    src={a.cover_url}
+                    alt={String(a.title)}
+                    fill
+                    sizes="(min-width: 768px) 25vw, 50vw"
+                    className="object-cover group-hover:scale-105 transition-transform"
+                  />
                 )}
                 <span className="absolute inset-x-0 bottom-0 bg-primary/80 text-primary-foreground text-xs font-bold p-2 truncate">
                   {String(a.title)}

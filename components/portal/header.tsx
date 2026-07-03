@@ -2,6 +2,7 @@
 
 import { useState, useSyncExternalStore } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import type { NavItem } from "./nav";
 
@@ -27,8 +28,7 @@ export function Header({ siteName, logoUrl, items }: { siteName: string; logoUrl
       <div className="mx-auto max-w-6xl px-5 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5 font-display font-semibold text-lg text-primary">
           {logoUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={logoUrl} alt={siteName} className="h-8 w-auto" />
+            <Image src={logoUrl} alt={siteName} width={140} height={32} className="h-8 w-auto object-contain" />
           ) : (
             siteName
           )}

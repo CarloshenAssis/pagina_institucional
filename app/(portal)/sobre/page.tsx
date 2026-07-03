@@ -1,5 +1,6 @@
 export const metadata = { title: "Sobre" };
 
+import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
 import { SectionHeading } from "@/components/portal/section-heading";
 import { RichText } from "@/components/portal/rich-text";
@@ -19,12 +20,16 @@ export default async function SobrePage() {
       <Reveal>
         <div className="grid gap-10 md:grid-cols-[2fr_3fr] items-start">
           {sobre?.photo_url && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={sobre.photo_url}
-              alt={sobre?.title ?? "Retrato"}
-              className="w-full aspect-[4/5] object-cover shadow-[16px_16px_0_0_rgba(27,45,107,0.2)]"
-            />
+            <div className="relative aspect-[4/5] shadow-[16px_16px_0_0_rgba(27,45,107,0.2)]">
+              <Image
+                src={sobre.photo_url}
+                alt={sobre?.title ?? "Retrato"}
+                fill
+                sizes="(min-width: 768px) 40vw, 100vw"
+                className="object-cover"
+                priority
+              />
+            </div>
           )}
           <div>
             <SectionHeading
@@ -62,8 +67,9 @@ export default async function SobrePage() {
           <SectionHeading eyebrow="Galeria" title="Registros" />
           <div className="grid gap-4 grid-cols-2 md:grid-cols-3">
             {gallery.map((url, i) => (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img key={i} src={url} alt="" className="w-full aspect-[4/3] object-cover" loading="lazy" />
+              <div key={i} className="relative aspect-[4/3]">
+                <Image src={url} alt="" fill sizes="(min-width: 768px) 33vw, 50vw" className="object-cover" />
+              </div>
             ))}
           </div>
         </Reveal>

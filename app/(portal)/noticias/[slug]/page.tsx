@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { getPublishedBySlug } from "@/lib/content/public-queries";
 import { itemMetadata } from "@/lib/content/seo";
 import { newsArticleJsonLd } from "@/lib/content/jsonld";
@@ -39,8 +40,9 @@ export default async function NoticiaDetailPage({ params }: { params: Promise<{ 
       </header>
 
       {noticia.cover_url && (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={noticia.cover_url} alt={noticia.title} className="w-full aspect-[3/2] object-cover" />
+        <div className="relative aspect-[3/2]">
+          <Image src={noticia.cover_url} alt={noticia.title} fill sizes="768px" className="object-cover" priority />
+        </div>
       )}
 
       {noticia.content && <RichText html={noticia.content} />}
@@ -50,8 +52,9 @@ export default async function NoticiaDetailPage({ params }: { params: Promise<{ 
       {gallery.length > 0 && (
         <div className="grid gap-4 grid-cols-2 md:grid-cols-3">
           {gallery.map((url, i) => (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img key={i} src={url} alt="" className="w-full aspect-[4/3] object-cover" loading="lazy" />
+            <div key={i} className="relative aspect-[4/3]">
+              <Image src={url} alt="" fill sizes="(min-width: 768px) 33vw, 50vw" className="object-cover" />
+            </div>
           ))}
         </div>
       )}

@@ -25,7 +25,7 @@ const nextConfig: NextConfig = {
     // hardcoded nesses arquivos, mesmo em produção — vira o domínio real da Vercel
     // se NEXT_PUBLIC_SITE_URL não for setada no dashboard.
     NEXT_PUBLIC_SITE_URL:
-      process.env.NEXT_PUBLIC_SITE_URL ?? "https://pagina-institucional-chi.vercel.app",
+      process.env.NEXT_PUBLIC_SITE_URL ?? "https://portaltialu.vercel.app",
   },
 };
 

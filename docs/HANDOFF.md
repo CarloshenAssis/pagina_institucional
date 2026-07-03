@@ -1,6 +1,6 @@
 # Handoff — continuar em outra máquina
 
-**Última atualização:** 2026-07-02
+**Última atualização:** 2026-07-03
 
 ## Estado do projeto
 
@@ -90,8 +90,8 @@ Plano de implementação: `docs/superpowers/plans/2026-07-01-portal-instituciona
 - ✅ Fase P7 (SEO): `generateMetadata` em todas as páginas públicas (`lib/content/seo.ts` → `itemMetadata`, sobrepõe `seo jsonb` do item ao padrão das Configurações; OG image reaproveita a capa); `app/sitemap.ts` dinâmico (rotas estáticas + slugs publicados via client anon puro); `app/robots.ts` (libera tudo exceto `/admin`); JSON-LD (`lib/content/jsonld.ts` + `components/portal/json-ld.tsx`) — `NewsArticle` no detalhe de notícia, `Event` nos cards da Agenda. `next.config.ts` ganhou `images.remotePatterns` para o bucket do Supabase Storage (obrigatório para `next/image` aceitar essas URLs). 12 testes novos, commit `29a063a`.
 ### Ações pendentes (em ordem de prioridade)
 
-1. **🔴 Mobile — pedir o protótipo ao Carlos primeiro.** Ele disse ter feito um design mobile e pediu para aplicá-lo ("da melhor maneira"), mas **o arquivo nunca chegou a nenhuma sessão** — nada em anexo, nada no repo. Feedback original (2026-07-02): layout mobile atual "bem quebrado". Não inventar layout mobile sem o protótipo — perguntar antes. Depois de recebido, aplicar em todas as páginas públicas de uma vez (desktop-first foi mantido intacto até lá).
-2. Fase P8 (Tasks 28–29): verificação E2E completa (fluxo admin→portal, tema dinâmico refletindo, mobile sem overflow — depende do item 1) e deploy/smoke test em produção.
+1. ✅ **Mobile (2026-07-03):** protótipo do Carlos recebido (mockups `Mobile.dc.html`/`AdminMobile.dc.html` simulando iPhone, marca placeholder "Helena Duarte") — padrão de referência: header sticky com hamburger→drawer, busca no drawer, seções empilhadas, no admin: topbar+hamburger→drawer agrupado (Dashboard/Conteúdo/Sistema), tabs com scroll horizontal, listas em cards. Auditoria mostrou que o **portal público já era responsivo** (Header/Footer/Home/listagens com breakpoints `md:`/`lg:` corretos) — só faltava busca no menu mobile (adicionada) e botão do form de contato full-width no mobile (ajustado). O **painel admin era desktop-only e quebrava abaixo de ~1024px** (sidebar fixa de 240px sem colapsar, sem hamburger) — convertido para drawer via novo `lib/admin/nav-context.tsx` (`AdminNavProvider`/`useAdminNav`), `Sidebar` (drawer fixed + overlay abaixo de `md`, estático em `md+`) e `Topbar` (botão hamburger). `ContentTable` (listas de módulo) reflowa para cards com labels inline abaixo de `md` em vez de grid fixo ilegível. Tabs de Configurações/Mídias com `overflow-x-auto`. Verificado com Playwright headless em viewport 390×844 (rota de preview temporária fora de `/admin`, removida após o teste — auth real não foi tocada). Commit `0b43bde`.
+2. Fase P8 (Tasks 28–29): verificação E2E completa (fluxo admin→portal, tema dinâmico refletindo) e deploy/smoke test em produção — a rede do ambiente cloud bloqueia `*.supabase.co`, então esse E2E com dados reais só é possível localmente ou habilitando a allowlist (ver "Sessões Claude Code na nuvem").
 3. **Formulário de contato ainda não testado de ponta a ponta** — depende de `NEXT_PUBLIC_TURNSTILE_SITE_KEY` + `TURNSTILE_SECRET_KEY` + `SUPABASE_SERVICE_ROLE_KEY` (Vercel + `.env.local`). Ao configurar, testar envio, honeypot e rate limit.
 
 ### Lembretes fixos

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Script from "next/script";
 import { sendContact } from "./actions";
 import { Input } from "@/components/ui/input";
@@ -8,10 +8,32 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
 // O widget do Turnstile (renderização implícita) preenche um input oculto
-// name="cf-turnstile-response" dentro do form.
+// name="cf-turnstile-response" dentro do form. Callbacks globais avisam quando
+// o token está pronto/expirou — o botão só habilita com token válido, senão o
+// envio chega ao servidor sem token e falha na validação ("Dados inválidos").
+declare global {
+  interface Window {
+    onTurnstileSuccess?: () => void;
+    onTurnstileExpired?: () => void;
+    onTurnstileError?: () => void;
+  }
+}
+
 export function ContactForm({ siteKey, enabled }: { siteKey: string | null; enabled: boolean }) {
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
+  const [tokenReady, setTokenReady] = useState(false);
+
+  useEffect(() => {
+    window.onTurnstileSuccess = () => setTokenReady(true);
+    window.onTurnstileExpired = () => setTokenReady(false);
+    window.onTurnstileError = () => setTokenReady(false);
+    return () => {
+      delete window.onTurnstileSuccess;
+      delete window.onTurnstileExpired;
+      delete window.onTurnstileError;
+    };
+  }, []);
 
   if (!enabled) {
     return (
@@ -37,6 +59,12 @@ export function ContactForm({ siteKey, enabled }: { siteKey: string | null; enab
       <form
         className="flex flex-col gap-4"
         action={async (formData) => {
+          const turnstileToken = String(formData.get("cf-turnstile-response") ?? "");
+          if (!turnstileToken) {
+            setStatus("error");
+            setError("Aguarde a verificação de segurança concluir e tente novamente.");
+            return;
+          }
           setStatus("sending");
           setError(null);
           const result = await sendContact({
@@ -46,7 +74,7 @@ export function ContactForm({ siteKey, enabled }: { siteKey: string | null; enab
             subject: String(formData.get("subject") ?? ""),
             message: String(formData.get("message") ?? ""),
             honeypot: String(formData.get("website") ?? ""),
-            turnstileToken: String(formData.get("cf-turnstile-response") ?? ""),
+            turnstileToken,
           });
           if (result.error) {
             setStatus("error");
@@ -89,7 +117,15 @@ export function ContactForm({ siteKey, enabled }: { siteKey: string | null; enab
           aria-hidden="true"
           className="absolute -left-[9999px] h-0 w-0 opacity-0"
         />
-        {siteKey && <div className="cf-turnstile" data-sitekey={siteKey} />}
+        {siteKey && (
+          <div
+            className="cf-turnstile"
+            data-sitekey={siteKey}
+            data-callback="onTurnstileSuccess"
+            data-expired-callback="onTurnstileExpired"
+            data-error-callback="onTurnstileError"
+          />
+        )}
         {error && (
           <p className="text-sm text-destructive" role="alert">
             {error}
@@ -97,11 +133,15 @@ export function ContactForm({ siteKey, enabled }: { siteKey: string | null; enab
         )}
         <button
           type="submit"
-          disabled={status === "sending"}
-          className="px-8 py-4 text-sm font-bold text-white w-full sm:w-fit disabled:opacity-60"
+          disabled={status === "sending" || !tokenReady}
+          className="px-8 py-4 text-sm font-bold text-white w-full sm:w-fit disabled:opacity-60 disabled:cursor-not-allowed"
           style={{ backgroundColor: "var(--rose, #E8327C)" }}
         >
-          {status === "sending" ? "Enviando..." : "Enviar mensagem →"}
+          {status === "sending"
+            ? "Enviando..."
+            : tokenReady
+              ? "Enviar mensagem →"
+              : "Verificando segurança..."}
         </button>
       </form>
     </>

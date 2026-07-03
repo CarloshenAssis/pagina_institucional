@@ -50,7 +50,7 @@ export function MediaGallery() {
 
   return (
     <Tabs value={tab} onValueChange={(v) => setTab(v as typeof tab)}>
-      <TabsList>
+      <TabsList className="max-w-full overflow-x-auto">
         {TABS.map((t) => (
           <TabsTrigger key={t.value} value={t.value}>
             {t.label}

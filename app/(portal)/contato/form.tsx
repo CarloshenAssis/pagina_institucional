@@ -98,7 +98,7 @@ export function ContactForm({ siteKey, enabled }: { siteKey: string | null; enab
         <button
           type="submit"
           disabled={status === "sending"}
-          className="px-8 py-4 text-sm font-bold text-white w-fit disabled:opacity-60"
+          className="px-8 py-4 text-sm font-bold text-white w-full sm:w-fit disabled:opacity-60"
           style={{ backgroundColor: "var(--rose, #E8327C)" }}
         >
           {status === "sending" ? "Enviando..." : "Enviar mensagem →"}

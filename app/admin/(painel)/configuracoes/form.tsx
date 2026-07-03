@@ -31,7 +31,7 @@ export function SettingsForm({ initial }: { initial: Record<string, string | nul
 
   return (
     <Tabs defaultValue="geral">
-      <TabsList>
+      <TabsList className="max-w-full overflow-x-auto">
         <TabsTrigger value="geral">Geral</TabsTrigger>
         <TabsTrigger value="contato">Contato</TabsTrigger>
         <TabsTrigger value="redes">Redes Sociais</TabsTrigger>

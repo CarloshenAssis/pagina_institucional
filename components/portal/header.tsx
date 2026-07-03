@@ -79,6 +79,15 @@ export function Header({ siteName, logoUrl, items }: { siteName: string; logoUrl
 
       {menuOpen && (
         <nav className="lg:hidden border-t border-primary/10 bg-background/95 backdrop-blur px-5 py-4 flex flex-col gap-3">
+          <form action="/pesquisa" role="search" className="mb-1">
+            <input
+              type="search"
+              name="q"
+              placeholder="Buscar…"
+              aria-label="Buscar no portal"
+              className="w-full border border-primary/20 bg-transparent px-3 py-2 text-sm outline-none rounded-sm"
+            />
+          </form>
           {items.map((i) => (
             <Link
               key={i.href}

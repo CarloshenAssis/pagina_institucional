@@ -3,26 +3,90 @@
 import { useState } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { saveSettings } from "./actions";
+import { saveSettings, saveTheme } from "./actions";
 import { metaDescriptionLength } from "./settings-utils";
 import { MediaPicker } from "@/components/admin/media-picker";
+import { HEX, type ThemeRow } from "@/lib/content/theme";
 
-export function SettingsForm({ initial }: { initial: Record<string, string | null> }) {
+const THEME_FIELDS: { key: keyof ThemeRow; label: string }[] = [
+  { key: "primary_color", label: "Cor primária (header, fundos escuros)" },
+  { key: "secondary_color", label: "Cor secundária (dourado, destaques)" },
+  { key: "accent_color", label: "Cor de destaque (botões de ação)" },
+  { key: "background_color", label: "Cor de fundo" },
+  { key: "text_primary_color", label: "Texto principal" },
+  { key: "text_secondary_color", label: "Texto secundário" },
+];
+
+function ColorField({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+}) {
+  const valid = HEX.test(value);
+  return (
+    <div className="flex flex-col gap-1.5">
+      <Label>{label}</Label>
+      <div className="flex items-center gap-2.5">
+        <input
+          type="color"
+          value={valid ? value : "#000000"}
+          onChange={(e) => onChange(e.target.value)}
+          className="h-8 w-10 shrink-0 rounded-md border border-input p-0.5"
+          aria-label={`${label} (seletor)`}
+        />
+        <Input
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          aria-invalid={!valid}
+          className="max-w-40"
+        />
+      </div>
+      {!valid && <span className="text-xs text-destructive">Hex inválido (ex.: #1B2D6B)</span>}
+    </div>
+  );
+}
+
+export function SettingsForm({
+  initial,
+  initialTheme,
+}: {
+  initial: Record<string, string | null>;
+  initialTheme: ThemeRow;
+}) {
   const [values, setValues] = useState(initial);
+  const [theme, setTheme] = useState(initialTheme);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [themeError, setThemeError] = useState<string | null>(null);
 
   function set(key: string, value: string) {
     setSaved(false);
     setValues((prev) => ({ ...prev, [key]: value }));
   }
 
+  function setColor(key: keyof ThemeRow, value: string) {
+    setSaved(false);
+    setTheme((prev) => ({ ...prev, [key]: value }));
+  }
+
   async function save() {
+    const invalid = THEME_FIELDS.find(({ key }) => !HEX.test(theme[key] ?? ""));
+    if (invalid) {
+      setThemeError(`Corrija a cor "${invalid.label}" antes de salvar.`);
+      return;
+    }
+    setThemeError(null);
     setSaving(true);
-    await saveSettings(
-      Object.fromEntries(Object.entries(values).map(([k, v]) => [k, v ?? ""]))
-    );
+    await Promise.all([
+      saveSettings(Object.fromEntries(Object.entries(values).map(([k, v]) => [k, v ?? ""]))),
+      saveTheme(theme),
+    ]);
     setSaving(false);
     setSaved(true);
   }
@@ -33,6 +97,7 @@ export function SettingsForm({ initial }: { initial: Record<string, string | nul
     <Tabs defaultValue="geral">
       <TabsList className="max-w-full overflow-x-auto">
         <TabsTrigger value="geral">Geral</TabsTrigger>
+        <TabsTrigger value="aparencia">Aparência</TabsTrigger>
         <TabsTrigger value="contato">Contato</TabsTrigger>
         <TabsTrigger value="redes">Redes Sociais</TabsTrigger>
         <TabsTrigger value="seo">SEO</TabsTrigger>
@@ -53,6 +118,27 @@ export function SettingsForm({ initial }: { initial: Record<string, string | nul
         />
         <Input placeholder="Texto — Política de Privacidade" value={values.footer_privacy_text ?? ""} onChange={(e) => set("footer_privacy_text", e.target.value)} />
         <Input placeholder="Texto — Termos de Uso" value={values.footer_terms_text ?? ""} onChange={(e) => set("footer_terms_text", e.target.value)} />
+      </TabsContent>
+
+      <TabsContent value="aparencia" className="flex flex-col gap-4 max-w-2xl pt-4">
+        <p className="text-sm text-muted-foreground">
+          Cores usadas em todo o portal público. Alterações aparecem no site assim que salvas.
+        </p>
+        <div className="grid gap-5 sm:grid-cols-2">
+          {THEME_FIELDS.map(({ key, label }) => (
+            <ColorField
+              key={key}
+              label={label}
+              value={theme[key] ?? ""}
+              onChange={(v) => setColor(key, v)}
+            />
+          ))}
+        </div>
+        {themeError && (
+          <p className="text-sm text-destructive" role="alert">
+            {themeError}
+          </p>
+        )}
       </TabsContent>
 
       <TabsContent value="contato" className="flex flex-col gap-4 max-w-2xl pt-4">

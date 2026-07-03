@@ -29,6 +29,17 @@ export async function listPublished(
   return { rows, total: count ?? 0 };
 }
 
+export async function listPublicCategories(module: "projetos" | "ideias" | "noticias" | "comunidade") {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("categories")
+    .select("id, name, slug")
+    .eq("module", module)
+    .order("name");
+  if (error) throw error;
+  return data ?? [];
+}
+
 export async function getPublishedBySlug(table: PublicTable, slug: string) {
   const supabase = await createClient();
   const { data, error } = await supabase

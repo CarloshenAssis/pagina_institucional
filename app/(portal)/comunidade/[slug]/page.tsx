@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import { getPublishedBySlug } from "@/lib/content/public-queries";
 import { itemMetadata } from "@/lib/content/seo";
 
@@ -10,6 +9,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return item ? itemMetadata(item) : {};
 }
 import { VideoEmbed } from "@/components/portal/video-embed";
+import { GalleryCarousel } from "@/components/portal/gallery-carousel";
 
 export default async function AlbumDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -38,15 +38,7 @@ export default async function AlbumDetailPage({ params }: { params: Promise<{ sl
         <p className="text-foreground/60 py-8">Este álbum ainda não tem fotos ou vídeos.</p>
       ) : (
         <>
-          {gallery.length > 0 && (
-            <div className="grid gap-4 grid-cols-2 md:grid-cols-3">
-              {gallery.map((url, i) => (
-                <div key={i} className="relative aspect-[4/3]">
-                  <Image src={url} alt="" fill sizes="(min-width: 768px) 33vw, 50vw" className="object-cover" />
-                </div>
-              ))}
-            </div>
-          )}
+          <GalleryCarousel urls={gallery} alt={album.title} />
           {videos.length > 0 && (
             <div className="grid gap-6 md:grid-cols-2">
               {videos.map((url, i) => (

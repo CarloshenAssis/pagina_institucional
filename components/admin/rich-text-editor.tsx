@@ -6,6 +6,7 @@ import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
 import { Table, TableRow, TableCell, TableHeader } from "@tiptap/extension-table";
 import Placeholder from "@tiptap/extension-placeholder";
+import { MediaPicker } from "./media-picker";
 
 export function RichTextEditor({
   value,
@@ -56,10 +57,15 @@ export function RichTextEditor({
         })}
         {btn("≡", "Lista", () => editor.chain().focus().toggleBulletList().run())}
         {btn("▦", "Tabela", () => editor.chain().focus().insertTable({ rows: 3, cols: 3 }).run())}
-        {btn("🖼", "Imagem", () => {
-          const url = window.prompt("URL da imagem:");
-          if (url) editor.chain().focus().setImage({ src: url }).run();
-        })}
+        <MediaPicker
+          type="imagem"
+          trigger={
+            <button type="button" title="Imagem" className="w-8 h-8 text-sm">
+              🖼
+            </button>
+          }
+          onSelect={(m) => editor.chain().focus().setImage({ src: m.url, alt: m.filename }).run()}
+        />
         {btn('"', "Citação", () => editor.chain().focus().toggleBlockquote().run())}
         {btn("—", "Separador", () => editor.chain().focus().setHorizontalRule().run())}
       </div>

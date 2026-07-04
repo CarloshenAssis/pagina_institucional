@@ -141,7 +141,14 @@
   h1,
   h2,
   h3,
-  h4 {
+  h4,
+  .font-display {
     @apply font-display;
+    /* Fraunces tem eixo óptico (opsz): em tamanhos grandes o navegador troca
+       sozinho pra um corte "display" com letras mais decorativas/exageradas
+       (o "j" com gancho grande é esse corte) — trava num valor "texto" pra
+       manter as letras normais em qualquer tamanho de título. */
+    font-optical-sizing: none;
+    font-variation-settings: "opsz" 14;
   }
 }

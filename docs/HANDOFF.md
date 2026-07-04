@@ -1,6 +1,30 @@
 # Handoff — continuar em outra máquina
 
-**Última atualização:** 2026-07-03 — Tasks 28/29 concluídas, épico do portal público fechado (ver seção no fim).
+**Última atualização:** 2026-07-04 — melhorias pós-lançamento em produção (ver "Changelog pós-épico" logo abaixo). Domínio de produção mudou para **https://portaltialu.vercel.app**.
+
+---
+
+## Changelog pós-épico (melhorias com o Carlos usando o sistema)
+
+> **Contexto:** depois do épico fechado, o Carlos passou a usar o sistema em produção e a pedir ajustes. Cada item abaixo já está **em produção** (`main` deployado na Vercel) e **verificado**. Esta lista existe para, quando for a hora, **re-sincronizar o repositório-base de revenda** (`github.com/CarloshenAssis/Portal_Institucional_Base`) — ver "Repositório-base" no fim desta seção.
+>
+> **Infra de produção da Tia Lu:** projeto Vercel serve em `portaltialu.vercel.app` (o antigo `pagina-institucional-chi.vercel.app` redireciona 307). Env vars configuradas na Vercel: Supabase URL/anon/service-role, Turnstile site/secret key, `NEXT_PUBLIC_SITE_URL`. Formulário de contato **ativo e testado ponta-a-ponta** em produção.
+
+| # | Mudança | Por quê | Migration DB? | Commits |
+|---|---|---|---|---|
+| 1 | **Fallback `NEXT_PUBLIC_SITE_URL` → `portaltialu.vercel.app`** (`next.config.ts`) | Carlos trocou o domínio na Vercel; sitemap/robots/OG precisavam do domínio novo | não | `5ade52c` |
+| 2 | **Formulário de contato — fix do envio** | "Dados inválidos" / botão travado: o token do Turnstile chegava vazio. Evoluiu por 3 commits até a solução final: **renderização explícita** do widget (`turnstile.render()` num ref, `?onload=&render=explicit`) — o modo implícito não renderiza confiável com `<Script>` do Next. Botão só habilita com token; exibe código de erro do widget | não | `1e0b273`, `9b53a25`, `4412ca5` |
+| 3 | **Sobre — editor de texto rico + Missão/Visão/Valores** | Campo "Texto" era `<textarea>` puro mas o portal renderiza como HTML (texto colado ficava corrido). Trocado por `RichTextEditor`. "Valores" existia no banco/portal mas não tinha campo no admin (Zod descartava). "Missão"/"Visão" não existiam em lugar nenhum | **SIM — `0008_sobre_missao_visao.sql`** (add `mission_text`, `vision_text` em `sobre`) | `73ed693` |
+| 4 | **Seletor de mídia — upload embutido + fix de miniaturas** | "Selecionar logo/favicon" só listava mídia existente, sem subir arquivo (obrigava ir na Biblioteca em outra aba). Agora sobe direto no diálogo (reusa `uploadMedia`). Miniaturas de imagem nunca renderizavam (`<div>` vazio) — corrigido | não | `33b2ec7` |
+| 5 | **Configurações — preview + botão Remover imagem** (logo, favicon, OG image) | Não havia como **tirar** uma logo/favicon já definidos (MediaPicker só trocava). Novo `ImageField` mostra a imagem atual com "Trocar"/"Remover" (seta vazio; Header/layout já tratam vazio) | não | `5086981` |
+| 6 | **Segurança de login — rate limit anti brute-force** | 5 tentativas erradas do mesmo IP travam o login por **45s** (cooldown a partir da última falha), mensagem "Aguarde N segundos". Enforcement **server-side** (robô não burla pelo cliente). Login certo zera o contador. Usa service role; degrada (pula) se a chave não existir | **SIM — `0009_login_attempts.sql`** (tabela `login_attempts` + job `pg_cron` de limpeza) | `7f47183`, `7cae3ec` |
+
+**Auditoria de segurança de chaves (2026-07-04, a pedido do Carlos):** nenhum `.env` versionado (só `.env.local.example` com campos vazios); `.gitignore` cobre `.env*`. Nenhum segredo hardcoded — `SUPABASE_SERVICE_ROLE_KEY`/`TURNSTILE_SECRET_KEY` só lidos via `process.env`. A anon key no `next.config.ts` é pública por design (protegida pelo RLS), não é vazamento.
+
+### ⚠️ Repositório-base de revenda — PRECISA RE-SINCRONIZAR
+O `Portal_Institucional_Base` (`github.com/CarloshenAssis/Portal_Institucional_Base`) foi criado no meio dessas mudanças — está **desatualizado**. Conferido em 2026-07-04: o repo base tem as migrations `0001`–`0008` mas **falta a `0009_login_attempts.sql`**, e falta o **código** dos itens 2–6 desta tabela (o repo base tem a migration `0008` mas provavelmente não o formulário de Sobre que a usa, nem os fixes de contato/seletor de mídia/remover imagem/login). Decisão do Carlos (2026-07-04): **acumular** as mudanças e re-sincronizar tudo de uma vez mais adiante, não a cada ajuste. Quando for: recopiar o código de `main` para o repo base, **remover de novo** os fallbacks hardcoded do `next.config.ts` (Supabase URL/anon key/`NEXT_PUBLIC_SITE_URL` apontam pra Tia Lu) e o `.env.local.example` específico, conferir que as migrations `0001`–`0009` estão todas lá, e dar push. Ver `docs/deploy.md` do repo base para o resto.
+
+---
 
 ## Estado do projeto
 

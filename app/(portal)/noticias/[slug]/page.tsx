@@ -7,6 +7,7 @@ import { newsArticleJsonLd } from "@/lib/content/jsonld";
 import { JsonLd } from "@/components/portal/json-ld";
 import { RichText } from "@/components/portal/rich-text";
 import { VideoEmbed } from "@/components/portal/video-embed";
+import { GalleryCarousel } from "@/components/portal/gallery-carousel";
 import { SocialShareButtons } from "@/components/admin/social-share-buttons";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
@@ -49,15 +50,7 @@ export default async function NoticiaDetailPage({ params }: { params: Promise<{ 
 
       {noticia.video_url && <VideoEmbed url={noticia.video_url} title={noticia.title} />}
 
-      {gallery.length > 0 && (
-        <div className="grid gap-4 grid-cols-2 md:grid-cols-3">
-          {gallery.map((url, i) => (
-            <div key={i} className="relative aspect-[4/3]">
-              <Image src={url} alt="" fill sizes="(min-width: 768px) 33vw, 50vw" className="object-cover" />
-            </div>
-          ))}
-        </div>
-      )}
+      <GalleryCarousel urls={gallery} alt={noticia.title} />
 
       {noticia.pdf_url && (
         <a href={noticia.pdf_url} target="_blank" rel="noreferrer" className="text-sm font-bold underline text-primary w-fit">

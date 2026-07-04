@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { SectionHeading } from "@/components/portal/section-heading";
 import { RichText } from "@/components/portal/rich-text";
 import { VideoEmbed } from "@/components/portal/video-embed";
+import { GalleryCarousel } from "@/components/portal/gallery-carousel";
 import { Reveal } from "@/components/portal/reveal";
 
 export default async function SobrePage() {
@@ -84,13 +85,7 @@ export default async function SobrePage() {
       {gallery.length > 0 && (
         <Reveal>
           <SectionHeading eyebrow="Galeria" title="Registros" />
-          <div className="grid gap-4 grid-cols-2 md:grid-cols-3">
-            {gallery.map((url, i) => (
-              <div key={i} className="relative aspect-[4/3]">
-                <Image src={url} alt="" fill sizes="(min-width: 768px) 33vw, 50vw" className="object-cover" />
-              </div>
-            ))}
-          </div>
+          <GalleryCarousel urls={gallery} alt="Registro" />
         </Reveal>
       )}
 

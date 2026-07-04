@@ -155,7 +155,11 @@ export function SettingsForm({
       <TabsContent value="redes" className="flex flex-col gap-4 max-w-2xl pt-4">
         <Input placeholder="Instagram" value={values.instagram_url ?? ""} onChange={(e) => set("instagram_url", e.target.value)} />
         <Input placeholder="Facebook" value={values.facebook_url ?? ""} onChange={(e) => set("facebook_url", e.target.value)} />
-        <Input placeholder="WhatsApp" value={values.whatsapp_url ?? ""} onChange={(e) => set("whatsapp_url", e.target.value)} />
+        <Input
+          placeholder="WhatsApp — número (12) 91234-5678 ou link wa.me"
+          value={values.whatsapp_url ?? ""}
+          onChange={(e) => set("whatsapp_url", e.target.value)}
+        />
       </TabsContent>
 
       <TabsContent value="seo" className="flex flex-col gap-4 max-w-2xl pt-4">
@@ -171,6 +175,19 @@ export function SettingsForm({
           onSelect={(url) => set("seo_og_image_url", url)}
           onClear={() => set("seo_og_image_url", "")}
         />
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="google_site_verification">Código de verificação — Google Search Console</Label>
+          <Input
+            id="google_site_verification"
+            placeholder="Cole aqui só o código (content=&quot;...&quot;), não a tag inteira"
+            value={values.google_site_verification ?? ""}
+            onChange={(e) => set("google_site_verification", e.target.value)}
+          />
+          <span className="text-xs text-muted-foreground">
+            Em search.google.com/search-console → Adicionar propriedade → método &quot;Tag HTML&quot;, copie só o
+            valor do atributo <code>content</code>.
+          </span>
+        </div>
       </TabsContent>
 
       <div className="flex items-center gap-3 mt-6">

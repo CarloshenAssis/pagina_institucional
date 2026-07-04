@@ -2,6 +2,7 @@ export const metadata = { title: "Contato" };
 
 import { createClient } from "@/lib/supabase/server";
 import { settingsToRecord } from "@/app/admin/(painel)/configuracoes/settings-utils";
+import { whatsappLink } from "@/lib/content/whatsapp";
 import { SectionHeading } from "@/components/portal/section-heading";
 import { ContactForm } from "./form";
 
@@ -34,7 +35,7 @@ export default async function ContatoPage() {
             )}
             {settings.contact_phone && <span>{settings.contact_phone}</span>}
             {settings.whatsapp_url && (
-              <a href={settings.whatsapp_url} target="_blank" rel="noreferrer" className="underline text-primary">
+              <a href={whatsappLink(settings.whatsapp_url)} target="_blank" rel="noreferrer" className="underline text-primary">
                 WhatsApp
               </a>
             )}

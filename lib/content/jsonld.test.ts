@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { newsArticleJsonLd, eventJsonLd } from "./jsonld";
+import { newsArticleJsonLd, eventJsonLd, personJsonLd } from "./jsonld";
 
 describe("newsArticleJsonLd", () => {
   it("builds a NewsArticle with headline, date and author", () => {
@@ -19,6 +19,25 @@ describe("newsArticleJsonLd", () => {
     expect(ld.datePublished).toBe("2026-07-01T10:00:00Z");
     expect(ld.author).toEqual({ "@type": "Person", name: "Tia Lu" });
     expect(ld.mainEntityOfPage).toBe("https://site.com/noticias/nota");
+  });
+});
+
+describe("personJsonLd", () => {
+  it("builds a Person with description, image and redes sociais", () => {
+    const ld = personJsonLd({
+      name: "Tia Lu",
+      description: "Pregadora infantil",
+      image: "https://ex.com/foto.jpg",
+      url: "https://site.com",
+      sameAs: ["https://instagram.com/x"],
+    });
+    expect(ld["@type"]).toBe("Person");
+    expect(ld.name).toBe("Tia Lu");
+    expect(ld.sameAs).toEqual(["https://instagram.com/x"]);
+  });
+  it("omite sameAs quando não há redes sociais", () => {
+    const ld = personJsonLd({ name: "Tia Lu", url: "https://site.com", sameAs: [] });
+    expect(ld.sameAs).toBeUndefined();
   });
 });
 

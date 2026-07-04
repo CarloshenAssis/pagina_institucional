@@ -14,6 +14,10 @@ export async function generateMetadata(): Promise<Metadata> {
   const title = s.seo_meta_title || siteName;
   const description = s.seo_meta_description || s.short_description || undefined;
   return {
+    // Sem isso, URLs relativas em metadata (ex.: imagens) resolvem errado —
+    // aqui as imagens já são absolutas, mas é a base correta pra qualquer
+    // metadata futura que use caminho relativo.
+    metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
     title: { default: title, template: `%s · ${siteName}` },
     description,
     openGraph: {
@@ -23,6 +27,7 @@ export async function generateMetadata(): Promise<Metadata> {
       images: s.seo_og_image_url ? [s.seo_og_image_url] : undefined,
     },
     icons: s.favicon_url ? { icon: s.favicon_url } : undefined,
+    verification: s.google_site_verification ? { google: s.google_site_verification } : undefined,
   };
 }
 

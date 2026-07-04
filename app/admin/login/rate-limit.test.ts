@@ -13,8 +13,8 @@ describe("loginLockRemainingMs", () => {
     const attempts = [now - 1000, now - 2000, now - 3000, now - 4000, now - 5000];
     const remaining = loginLockRemainingMs(attempts, now);
     expect(remaining).toBeGreaterThan(0);
-    // a tentativa mais antiga foi há 5s; faltam ~40s da janela de 45s
-    expect(remaining).toBe(40_000);
+    // conta a partir da tentativa MAIS RECENTE (há 1s); faltam ~44s de 45s
+    expect(remaining).toBe(44_000);
   });
 
   it("ignora tentativas fora da janela de 45s", () => {

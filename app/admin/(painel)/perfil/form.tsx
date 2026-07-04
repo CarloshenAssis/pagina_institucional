@@ -5,7 +5,7 @@ import { useTheme } from "next-themes";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { MediaPicker } from "@/components/admin/media-picker";
+import { ImageField } from "@/components/admin/image-field";
 import { saveProfile, changePassword } from "./actions";
 
 export function PerfilForm({
@@ -23,14 +23,13 @@ export function PerfilForm({
 
   return (
     <div className="max-w-xl flex flex-col gap-5">
-      <div className="flex items-center gap-3">
-        <MediaPicker
-          type="imagem"
-          trigger={<button type="button" className="text-sm underline w-fit">Alterar foto</button>}
-          onSelect={(m) => setPhotoUrl(m.url)}
-        />
-        {photoUrl && <span className="text-xs text-muted-foreground truncate">{photoUrl}</span>}
-      </div>
+      <ImageField
+        label="Foto do perfil"
+        hint="400×400px, quadrada"
+        url={photoUrl}
+        onSelect={(url) => { setSaved(false); setPhotoUrl(url); }}
+        onClear={() => { setSaved(false); setPhotoUrl(""); }}
+      />
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="name">Nome</Label>
         <Input id="name" value={name} onChange={(e) => { setSaved(false); setName(e.target.value); }} />

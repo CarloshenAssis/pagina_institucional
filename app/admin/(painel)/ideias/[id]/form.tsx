@@ -8,6 +8,7 @@ import { saveIdeia, setIdeiaStatus } from "../actions";
 import { StatusActionsBar } from "@/components/admin/status-actions-bar";
 import { RevisionHistory } from "@/components/admin/revision-history";
 import { MediaPicker } from "@/components/admin/media-picker";
+import { ImageField } from "@/components/admin/image-field";
 import { CategoryCombobox } from "@/components/admin/category-combobox";
 import { RichTextEditor } from "@/components/admin/rich-text-editor";
 import { Input } from "@/components/ui/input";
@@ -71,10 +72,12 @@ export function IdeiaForm({ id, initial }: { id: string | null; initial?: Partia
           <Label>Conteúdo</Label>
           <RichTextEditor value={watch("content") ?? ""} onChange={(html) => setValue("content", html)} />
         </div>
-        <MediaPicker
-          type="imagem"
-          trigger={<button type="button" className="text-sm underline w-fit">Selecionar capa</button>}
-          onSelect={(m) => setValue("cover_url", m.url)}
+        <ImageField
+          label="Capa"
+          hint="1200×800px (proporção 3:2)"
+          url={watch("cover_url") ?? ""}
+          onSelect={(url) => setValue("cover_url", url)}
+          onClear={() => setValue("cover_url", "")}
         />
         <MediaPicker
           type="video"

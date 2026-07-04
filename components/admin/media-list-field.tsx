@@ -7,11 +7,13 @@ import type { MediaItem } from "@/lib/content/media-actions";
 // escolhidas no MediaPicker e permite remover itens.
 export function MediaListField({
   label,
+  hint,
   type,
   urls,
   onChange,
 }: {
   label: string;
+  hint?: string;
   type: MediaItem["type"];
   urls: string[];
   onChange: (urls: string[]) => void;
@@ -19,6 +21,7 @@ export function MediaListField({
   return (
     <div className="flex flex-col gap-2">
       <span className="text-sm font-medium">{label}</span>
+      {hint && <span className="text-xs text-muted-foreground -mt-1">Tamanho ideal: {hint}</span>}
       {urls.length > 0 && (
         <ul className="flex flex-col gap-1">
           {urls.map((url, i) => (

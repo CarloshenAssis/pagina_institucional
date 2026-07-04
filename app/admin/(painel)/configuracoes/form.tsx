@@ -1,67 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { saveSettings, saveTheme } from "./actions";
 import { metaDescriptionLength } from "./settings-utils";
-import { MediaPicker } from "@/components/admin/media-picker";
+import { ImageField } from "@/components/admin/image-field";
 import { HEX, type ThemeRow } from "@/lib/content/theme";
-
-// Campo de imagem com preview + selecionar/trocar + remover. Sem isso não
-// havia como tirar uma logo/favicon já definidos.
-function ImageField({
-  label,
-  url,
-  onSelect,
-  onClear,
-}: {
-  label: string;
-  url: string;
-  onSelect: (url: string) => void;
-  onClear: () => void;
-}) {
-  return (
-    <div className="flex flex-col gap-1.5">
-      <Label>{label}</Label>
-      <div className="flex items-center gap-3">
-        {url ? (
-          <Image
-            src={url}
-            alt={label}
-            width={48}
-            height={48}
-            unoptimized
-            className="h-12 w-12 object-contain border bg-card shrink-0"
-          />
-        ) : (
-          <span className="text-xs text-muted-foreground">Nenhuma imagem selecionada</span>
-        )}
-        <MediaPicker
-          type="imagem"
-          trigger={
-            <button type="button" className="text-sm underline w-fit">
-              {url ? "Trocar" : "Selecionar"}
-            </button>
-          }
-          onSelect={(m) => onSelect(m.url)}
-        />
-        {url && (
-          <button
-            type="button"
-            className="text-sm underline text-destructive w-fit"
-            onClick={onClear}
-          >
-            Remover
-          </button>
-        )}
-      </div>
-    </div>
-  );
-}
 
 const THEME_FIELDS: { key: keyof ThemeRow; label: string }[] = [
   { key: "primary_color", label: "Cor primária (header, fundos escuros)" },
@@ -161,12 +108,14 @@ export function SettingsForm({
         <Input placeholder="Descrição curta" value={values.short_description ?? ""} onChange={(e) => set("short_description", e.target.value)} />
         <ImageField
           label="Logo"
+          hint="400×120px, PNG com fundo transparente"
           url={values.logo_url ?? ""}
           onSelect={(url) => set("logo_url", url)}
           onClear={() => set("logo_url", "")}
         />
         <ImageField
           label="Favicon"
+          hint="512×512px, quadrada (ícone da aba do navegador)"
           url={values.favicon_url ?? ""}
           onSelect={(url) => set("favicon_url", url)}
           onClear={() => set("favicon_url", "")}
@@ -216,7 +165,8 @@ export function SettingsForm({
           {metaDesc.count}/{metaDesc.max} caracteres
         </span>
         <ImageField
-          label="Imagem Open Graph (1200×630px)"
+          label="Imagem Open Graph"
+          hint="1200×630px (imagem ao compartilhar o link em redes sociais)"
           url={values.seo_og_image_url ?? ""}
           onSelect={(url) => set("seo_og_image_url", url)}
           onClear={() => set("seo_og_image_url", "")}

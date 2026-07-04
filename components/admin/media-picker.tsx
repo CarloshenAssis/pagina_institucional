@@ -69,7 +69,7 @@ export function MediaPicker({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger render={trigger} />
-      <DialogContent className="max-w-3xl">
+      <DialogContent className="w-[95vw] sm:max-w-2xl md:max-w-3xl">
         <div className="border-2 border-dashed p-5 flex flex-col gap-2 items-center text-center">
           <input
             ref={fileRef}
@@ -94,32 +94,34 @@ export function MediaPicker({
             Nenhum arquivo encontrado para &quot;{query}&quot;.
           </p>
         ) : (
-          <div className="grid grid-cols-5 gap-4 max-h-96 overflow-y-auto">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 max-h-[60vh] overflow-y-auto">
             {filtered.map((item) => (
               <button
                 key={item.id}
                 type="button"
-                className="border text-left"
+                className="border text-left hover:ring-2 hover:ring-ring rounded overflow-hidden"
                 onClick={() => {
                   onSelect(item);
                   setOpen(false);
                 }}
               >
-                <div className="h-28 bg-background overflow-hidden flex items-center justify-center">
+                {/* aspect fixo + object-contain: a imagem inteira aparece,
+                    sem distorcer nem cortar (evita miniatura "quebrada"). */}
+                <div className="aspect-square bg-muted flex items-center justify-center">
                   {item.type === "imagem" ? (
                     <Image
                       src={item.url}
                       alt={item.filename}
                       width={200}
-                      height={112}
-                      className="object-cover w-full h-full"
+                      height={200}
+                      className="object-contain w-full h-full"
                       unoptimized
                     />
                   ) : (
                     <span className="text-2xl">{item.type === "video" ? "▶" : "📄"}</span>
                   )}
                 </div>
-                <div className="p-2.5 text-xs font-semibold truncate">{item.filename}</div>
+                <div className="p-2 text-xs font-semibold truncate">{item.filename}</div>
               </button>
             ))}
           </div>

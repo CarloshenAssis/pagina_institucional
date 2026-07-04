@@ -8,6 +8,7 @@ import { saveTrajetoriaItem, setTrajetoriaStatus } from "../actions";
 import { StatusActionsBar } from "@/components/admin/status-actions-bar";
 import { RevisionHistory } from "@/components/admin/revision-history";
 import { MediaPicker } from "@/components/admin/media-picker";
+import { ImageField } from "@/components/admin/image-field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -15,7 +16,7 @@ import { Topbar } from "@/components/admin/topbar";
 
 export function TrajetoriaForm({ id, initial }: { id: string | null; initial?: Partial<TrajetoriaInput> }) {
   const router = useRouter();
-  const { register, handleSubmit, setValue } = useForm({
+  const { register, handleSubmit, setValue, watch } = useForm({
     resolver: zodResolver(trajetoriaSchema),
     defaultValues: {
       year: new Date().getFullYear(),
@@ -50,10 +51,12 @@ export function TrajetoriaForm({ id, initial }: { id: string | null; initial?: P
           <Label htmlFor="description">Descrição</Label>
           <Textarea id="description" {...register("description")} />
         </div>
-        <MediaPicker
-          type="imagem"
-          trigger={<button type="button" className="text-sm underline w-fit">Selecionar imagem</button>}
-          onSelect={(m) => setValue("image_url", m.url)}
+        <ImageField
+          label="Imagem"
+          hint="1200×800px (proporção 3:2)"
+          url={watch("image_url") ?? ""}
+          onSelect={(url) => setValue("image_url", url)}
+          onClear={() => setValue("image_url", "")}
         />
         <MediaPicker
           type="video"

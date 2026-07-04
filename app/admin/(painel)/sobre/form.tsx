@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { MediaPicker } from "@/components/admin/media-picker";
 import { MediaListField } from "@/components/admin/media-list-field";
+import { ImageField } from "@/components/admin/image-field";
 import { RichTextEditor } from "@/components/admin/rich-text-editor";
 import { StringListField } from "@/components/admin/string-list-field";
 
@@ -47,13 +48,16 @@ export function SobreForm({ initial }: { initial: Partial<SobreInput> }) {
         values={watch("values_list") ?? []}
         onChange={(values) => setValue("values_list", values)}
       />
-      <MediaPicker
-        type="imagem"
-        trigger={<button type="button" className="text-sm underline w-fit">Selecionar imagem principal</button>}
-        onSelect={(m) => setValue("photo_url", m.url)}
+      <ImageField
+        label="Imagem principal (retrato)"
+        hint="1000×1250px, retrato (proporção 4:5)"
+        url={watch("photo_url") ?? ""}
+        onSelect={(url) => setValue("photo_url", url)}
+        onClear={() => setValue("photo_url", "")}
       />
       <MediaListField
         label="Galeria"
+        hint="1200×900px (proporção 4:3)"
         type="imagem"
         urls={watch("gallery_urls") ?? []}
         onChange={(urls) => setValue("gallery_urls", urls)}

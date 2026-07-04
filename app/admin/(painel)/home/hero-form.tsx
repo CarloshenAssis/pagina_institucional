@@ -2,7 +2,7 @@
 
 import { useForm } from "react-hook-form";
 import { saveHero } from "./actions";
-import { MediaPicker } from "@/components/admin/media-picker";
+import { ImageField } from "@/components/admin/image-field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -31,14 +31,13 @@ export function HeroForm({ initial }: { initial: Partial<HeroInput> }) {
       className="max-w-3xl flex flex-col gap-4 bg-card border p-6"
     >
       <span className="text-xs font-bold uppercase text-muted-foreground">Hero (banner principal)</span>
-      <div className="flex items-center gap-3">
-        <MediaPicker
-          type="imagem"
-          trigger={<button type="button" className="text-sm underline w-fit">Selecionar foto do hero</button>}
-          onSelect={(m) => setValue("hero_photo_url", m.url)}
-        />
-        {watch("hero_photo_url") && <span className="text-xs text-muted-foreground truncate">{watch("hero_photo_url")}</span>}
-      </div>
+      <ImageField
+        label="Foto do hero (retrato)"
+        hint="1000×1250px, retrato (proporção 4:5)"
+        url={watch("hero_photo_url") ?? ""}
+        onSelect={(url) => setValue("hero_photo_url", url)}
+        onClear={() => setValue("hero_photo_url", "")}
+      />
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="hero_title">Título</Label>
         <Input id="hero_title" {...register("hero_title")} />

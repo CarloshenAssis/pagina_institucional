@@ -7,7 +7,7 @@ import { eventoSchema, type EventoInput } from "@/lib/validations/agenda";
 import { saveEvento, setEventoStatus } from "../actions";
 import { StatusActionsBar } from "@/components/admin/status-actions-bar";
 import { RevisionHistory } from "@/components/admin/revision-history";
-import { MediaPicker } from "@/components/admin/media-picker";
+import { ImageField } from "@/components/admin/image-field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -15,7 +15,7 @@ import { Topbar } from "@/components/admin/topbar";
 
 export function EventoForm({ id, initial }: { id: string | null; initial?: Partial<EventoInput> }) {
   const router = useRouter();
-  const { register, handleSubmit, setValue } = useForm({
+  const { register, handleSubmit, setValue, watch } = useForm({
     resolver: zodResolver(eventoSchema),
     defaultValues: {
       title: "",
@@ -63,10 +63,12 @@ export function EventoForm({ id, initial }: { id: string | null; initial?: Parti
           <Label htmlFor="external_url">Link externo</Label>
           <Input id="external_url" {...register("external_url")} />
         </div>
-        <MediaPicker
-          type="imagem"
-          trigger={<button type="button" className="text-sm underline w-fit">Selecionar imagem</button>}
-          onSelect={(m) => setValue("image_url", m.url)}
+        <ImageField
+          label="Imagem"
+          hint="1200×800px (proporção 3:2)"
+          url={watch("image_url") ?? ""}
+          onSelect={(url) => setValue("image_url", url)}
+          onClear={() => setValue("image_url", "")}
         />
         {id && <RevisionHistory table="events" recordId={id} />}
         <StatusActionsBar

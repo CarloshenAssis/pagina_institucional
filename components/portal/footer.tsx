@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { NavItem } from "./nav";
+import { whatsappLink } from "@/lib/content/whatsapp";
 
 export function Footer({
   siteName,
@@ -13,7 +14,7 @@ export function Footer({
   const socials = [
     { label: "Instagram", url: settings.instagram_url },
     { label: "Facebook", url: settings.facebook_url },
-    { label: "WhatsApp", url: settings.whatsapp_url },
+    { label: "WhatsApp", url: settings.whatsapp_url ? whatsappLink(settings.whatsapp_url) : null },
   ].filter((s) => s.url);
 
   return (

@@ -23,6 +23,26 @@ export function newsArticleJsonLd(
   } as const;
 }
 
+// Ajuda o Google a entender quem é o assunto do site (potencial Knowledge
+// Panel) — renderizado uma vez na Home com os dados do Sobre + redes sociais.
+export function personJsonLd(person: {
+  name: string;
+  description?: string | null;
+  image?: string | null;
+  url: string;
+  sameAs: string[];
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: person.name,
+    description: person.description ?? undefined,
+    image: person.image ?? undefined,
+    url: person.url,
+    sameAs: person.sameAs.length > 0 ? person.sameAs : undefined,
+  } as const;
+}
+
 export function eventJsonLd(event: {
   title: string;
   date: string;

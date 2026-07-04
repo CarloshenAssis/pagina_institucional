@@ -1,6 +1,9 @@
 import { createClient } from "@/lib/supabase/server";
 import { orderedVisibleSections } from "@/lib/content/home-render";
 import { settingsToRecord } from "@/app/admin/(painel)/configuracoes/settings-utils";
+import { personJsonLd } from "@/lib/content/jsonld";
+import { JsonLd } from "@/components/portal/json-ld";
+import { whatsappLink } from "@/lib/content/whatsapp";
 import {
   HeroSection,
   SobreSection,
@@ -103,5 +106,25 @@ export default async function HomePage() {
     contato: () => <ContatoSection key="contato" settings={settings} />,
   };
 
-  return <>{sections.map((key) => renderers[key]?.())}</>;
+  const sobre = sobreRes.data as { title?: string; subtitle?: string; photo_url?: string } | null;
+  const sameAs = [
+    settings.instagram_url,
+    settings.facebook_url,
+    settings.whatsapp_url ? whatsappLink(settings.whatsapp_url) : null,
+  ].filter((url): url is string => Boolean(url));
+
+  return (
+    <>
+      <JsonLd
+        data={personJsonLd({
+          name: settings.site_name || sobre?.title || "Portal Institucional",
+          description: sobre?.subtitle || settings.short_description || null,
+          image: sobre?.photo_url || null,
+          url: process.env.NEXT_PUBLIC_SITE_URL || "",
+          sameAs,
+        })}
+      />
+      {sections.map((key) => renderers[key]?.())}
+    </>
+  );
 }

@@ -1,12 +1,15 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
+import { Lightbox } from "./lightbox";
 
 // Carrossel deslizável sem dependência externa: scroll horizontal nativo com
 // snap (funciona por toque/swipe sozinho) + setas para clique no desktop.
+// Clicar em uma foto abre o visualizador em tela cheia com zoom (Lightbox).
 export function GalleryCarousel({ urls, alt }: { urls: string[]; alt: string }) {
   const scrollerRef = useRef<HTMLDivElement>(null);
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   function scrollByPage(direction: 1 | -1) {
     const el = scrollerRef.current;
@@ -23,18 +26,21 @@ export function GalleryCarousel({ urls, alt }: { urls: string[]; alt: string }) 
         className="flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {urls.map((url, i) => (
-          <div
+          <button
             key={`${url}-${i}`}
-            className="relative shrink-0 w-full sm:w-[calc(50%-0.5rem)] md:w-[calc(33.333%-0.667rem)] aspect-[4/3] snap-start"
+            type="button"
+            aria-label={`Ampliar foto ${i + 1}`}
+            onClick={() => setOpenIndex(i)}
+            className="relative shrink-0 w-full sm:w-[calc(65%-0.5rem)] md:w-[calc(50%-0.5rem)] lg:w-[calc(42%-0.5rem)] aspect-[4/3] snap-start cursor-zoom-in"
           >
             <Image
               src={url}
               alt={`${alt} ${i + 1}`}
               fill
-              sizes="(min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
+              sizes="(min-width: 1024px) 42vw, (min-width: 768px) 50vw, (min-width: 640px) 65vw, 100vw"
               className="object-cover"
             />
-          </div>
+          </button>
         ))}
       </div>
       {urls.length > 1 && (
@@ -56,6 +62,15 @@ export function GalleryCarousel({ urls, alt }: { urls: string[]; alt: string }) 
             ›
           </button>
         </>
+      )}
+      {openIndex !== null && (
+        <Lightbox
+          urls={urls}
+          alt={alt}
+          index={openIndex}
+          onClose={() => setOpenIndex(null)}
+          onNavigate={setOpenIndex}
+        />
       )}
     </div>
   );

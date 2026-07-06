@@ -169,7 +169,7 @@ export function Lightbox({
         type="button"
         aria-label="Fechar"
         onClick={onClose}
-        className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center text-white text-3xl leading-none hover:opacity-70"
+        className="absolute z-10 top-4 right-4 w-10 h-10 flex items-center justify-center text-white text-3xl leading-none hover:opacity-70"
       >
         ×
       </button>
@@ -180,7 +180,7 @@ export function Lightbox({
             type="button"
             aria-label="Foto anterior"
             onClick={() => onNavigate((index - 1 + urls.length) % urls.length)}
-            className="hidden sm:flex absolute left-4 top-1/2 -translate-y-1/2 w-11 h-11 items-center justify-center text-white text-3xl leading-none hover:opacity-70"
+            className="hidden sm:flex z-10 absolute left-4 top-1/2 -translate-y-1/2 w-11 h-11 items-center justify-center text-white text-3xl leading-none hover:opacity-70"
           >
             ‹
           </button>
@@ -188,7 +188,7 @@ export function Lightbox({
             type="button"
             aria-label="Próxima foto"
             onClick={() => onNavigate((index + 1) % urls.length)}
-            className="hidden sm:flex absolute right-4 top-1/2 -translate-y-1/2 w-11 h-11 items-center justify-center text-white text-3xl leading-none hover:opacity-70"
+            className="hidden sm:flex z-10 absolute right-4 top-1/2 -translate-y-1/2 w-11 h-11 items-center justify-center text-white text-3xl leading-none hover:opacity-70"
           >
             ›
           </button>
@@ -197,7 +197,7 @@ export function Lightbox({
 
       <ZoomableImage key={index} url={urls[index]} alt={`${alt} ${index + 1}`} />
 
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-white/70">
+      <div className="absolute z-10 bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-white/70">
         {urls.length > 1 && <span className="text-xs">{index + 1} / {urls.length}</span>}
         <span className="text-[11px] hidden sm:inline">Duplo clique ou role o mouse para ampliar</span>
         <span className="text-[11px] sm:hidden">Toque duas vezes ou belisque para ampliar</span>

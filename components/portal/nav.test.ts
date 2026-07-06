@@ -10,9 +10,9 @@ describe("visibleNavItems", () => {
     const items = visibleNavItems({ agenda_page_enabled: "false" });
     expect(items.map((i) => i.href)).not.toContain("/agenda");
   });
-  it("always starts with Início and ends with Contato", () => {
+  it("always starts with Início and ends with Escutando o Povo", () => {
     const items = visibleNavItems({});
     expect(items[0]).toEqual({ label: "Início", href: "/" });
-    expect(items[items.length - 1]).toEqual({ label: "Contato", href: "/contato" });
+    expect(items[items.length - 1]).toEqual({ label: "Escutando o Povo", href: "/contato" });
   });
 });

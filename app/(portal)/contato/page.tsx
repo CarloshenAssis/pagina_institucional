@@ -1,4 +1,4 @@
-export const metadata = { title: "Contato" };
+export const metadata = { title: "Escutando o Povo" };
 
 import { createClient } from "@/lib/supabase/server";
 import { settingsToRecord } from "@/app/admin/(painel)/configuracoes/settings-utils";
@@ -19,9 +19,9 @@ export default async function ContatoPage() {
   return (
     <div className="mx-auto max-w-6xl px-5 py-16">
       <SectionHeading
-        eyebrow="Contato"
+        eyebrow="Escutando o Povo"
         title="Vamos conversar?"
-        subtitle="Envie sua mensagem, sugestão ou convite."
+        subtitle="Envie sua mensagem, sugestão, denúncia ou pedido — selecione o assunto para agilizar o atendimento."
       />
       <div className="grid gap-12 md:grid-cols-[3fr_2fr]">
         <ContactForm siteKey={siteKey} enabled={enabled} />

@@ -1,6 +1,5 @@
-export const metadata = { title: "Projetos" };
+export const metadata = { title: "Conquistas" };
 
-import Link from "next/link";
 import { listPublished, listPublicCategories } from "@/lib/content/public-queries";
 import { totalPages } from "@/lib/content/pagination";
 import { SectionHeading } from "@/components/portal/section-heading";
@@ -9,7 +8,7 @@ import { ProjectCard } from "@/components/portal/cards";
 
 const PER_PAGE = 12;
 
-export default async function ProjetosPage({
+export default async function ConquistasPage({
   searchParams,
 }: {
   searchParams: Promise<{ page?: string; categoria?: string }>;
@@ -17,19 +16,16 @@ export default async function ProjetosPage({
   const { page: pageParam, categoria } = await searchParams;
   const page = Number(pageParam) || 1;
   const [{ rows, total }, categories] = await Promise.all([
-    listPublished("projects", { page, perPage: PER_PAGE, categorySlug: categoria }),
+    listPublished("projects", { page, perPage: PER_PAGE, categorySlug: categoria, stage: "concluido" }),
     listPublicCategories("projetos"),
   ]);
 
   return (
     <div className="mx-auto max-w-6xl px-5 py-16">
-      <SectionHeading eyebrow="Projetos" title="Projetos" subtitle="Iniciativas propostas, em andamento e concluídas." />
-      <Link href="/conquistas" className="inline-block mb-6 text-sm font-bold underline text-primary">
-        Ver só as conquistas (projetos concluídos) →
-      </Link>
-      <CategoryFilter basePath="/projetos" categories={categories} active={categoria} />
+      <SectionHeading eyebrow="Conquistas" title="Conquistas" subtitle="Resultados concretos já entregues." />
+      <CategoryFilter basePath="/conquistas" categories={categories} active={categoria} />
       {rows.length === 0 ? (
-        <EmptyState label="Nenhum projeto publicado ainda." />
+        <EmptyState label="Nenhuma conquista publicada ainda." />
       ) : (
         <div className="grid gap-6 md:grid-cols-3">
           {rows.map((p) => (
@@ -38,7 +34,7 @@ export default async function ProjetosPage({
           ))}
         </div>
       )}
-      <PaginationNav basePath="/projetos" page={page} pages={totalPages(total, PER_PAGE)} categoria={categoria} />
+      <PaginationNav basePath="/conquistas" page={page} pages={totalPages(total, PER_PAGE)} categoria={categoria} />
     </div>
   );
 }

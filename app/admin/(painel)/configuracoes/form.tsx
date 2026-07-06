@@ -160,6 +160,7 @@ export function SettingsForm({
           value={values.whatsapp_url ?? ""}
           onChange={(e) => set("whatsapp_url", e.target.value)}
         />
+        <Input placeholder="YouTube" value={values.youtube_url ?? ""} onChange={(e) => set("youtube_url", e.target.value)} />
       </TabsContent>
 
       <TabsContent value="seo" className="flex flex-col gap-4 max-w-2xl pt-4">

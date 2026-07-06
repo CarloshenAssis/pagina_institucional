@@ -6,6 +6,7 @@ import { sendContact } from "./actions";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { CONTACT_CATEGORIES, CONTACT_CATEGORY_LABELS } from "@/lib/content/contact-categories";
 
 // Renderização EXPLÍCITA do Turnstile (o modo implícito não renderiza de forma
 // confiável com o <Script> do Next). Carregamos api.js com ?onload=&render=explicit,
@@ -108,6 +109,7 @@ export function ContactForm({ siteKey, enabled }: { siteKey: string | null; enab
             name: String(formData.get("name") ?? ""),
             email: String(formData.get("email") ?? ""),
             phone: String(formData.get("phone") ?? "") || undefined,
+            category: String(formData.get("category") ?? ""),
             subject: String(formData.get("subject") ?? ""),
             message: String(formData.get("message") ?? ""),
             honeypot: String(formData.get("website") ?? ""),
@@ -137,9 +139,28 @@ export function ContactForm({ siteKey, enabled }: { siteKey: string | null; enab
             <Input id="phone" name="phone" />
           </div>
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="subject">Assunto</Label>
-            <Input id="subject" name="subject" required />
+            <Label htmlFor="category">Categoria</Label>
+            <select
+              id="category"
+              name="category"
+              required
+              defaultValue=""
+              className="h-8 w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-1 text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 md:text-sm"
+            >
+              <option value="" disabled>
+                Selecione um assunto
+              </option>
+              {CONTACT_CATEGORIES.map((c) => (
+                <option key={c} value={c}>
+                  {CONTACT_CATEGORY_LABELS[c]}
+                </option>
+              ))}
+            </select>
           </div>
+        </div>
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="subject">Assunto</Label>
+          <Input id="subject" name="subject" required />
         </div>
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="message">Mensagem</Label>

@@ -110,6 +110,7 @@ export default async function HomePage() {
   const sameAs = [
     settings.instagram_url,
     settings.facebook_url,
+    settings.youtube_url,
     settings.whatsapp_url ? whatsappLink(settings.whatsapp_url) : null,
   ].filter((url): url is string => Boolean(url));
 

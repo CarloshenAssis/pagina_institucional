@@ -9,10 +9,13 @@ export const STATUS_LABELS: Record<ContentStatus, string> = {
 };
 
 export function nextStatusOnPublish(
-  scheduledAtInput: string | null
-): { status: ContentStatus; scheduled_at: string | null } {
-  if (!scheduledAtInput) return { status: "publicado", scheduled_at: null };
+  scheduledAtInput: string | null,
+  now: Date = new Date()
+): { status: ContentStatus; scheduled_at: string | null; published_at: string | null } {
+  if (!scheduledAtInput) return { status: "publicado", scheduled_at: null, published_at: now.toISOString() };
   const target = new Date(scheduledAtInput);
-  if (target.getTime() <= Date.now()) return { status: "publicado", scheduled_at: null };
-  return { status: "agendado", scheduled_at: scheduledAtInput };
+  if (target.getTime() <= now.getTime()) {
+    return { status: "publicado", scheduled_at: null, published_at: now.toISOString() };
+  }
+  return { status: "agendado", scheduled_at: scheduledAtInput, published_at: null };
 }

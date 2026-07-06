@@ -5,6 +5,8 @@ import { settingsToRecord } from "@/app/admin/(painel)/configuracoes/settings-ut
 import { visibleNavItems } from "@/components/portal/nav";
 import { Header } from "@/components/portal/header";
 import { Footer } from "@/components/portal/footer";
+import { WhatsAppFloat } from "@/components/portal/whatsapp-float";
+import { whatsappLink } from "@/lib/content/whatsapp";
 
 export async function generateMetadata(): Promise<Metadata> {
   const supabase = await createClient();
@@ -48,6 +50,7 @@ export default async function PortalLayout({ children }: { children: React.React
       <Header siteName={siteName} logoUrl={settings.logo_url ?? null} items={items} />
       <main className="flex-1 pt-16">{children}</main>
       <Footer siteName={siteName} settings={settings} items={items} />
+      <WhatsAppFloat url={settings.whatsapp_url ? whatsappLink(settings.whatsapp_url) : null} />
     </>
   );
 }

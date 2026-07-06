@@ -16,6 +16,7 @@ export const NAV_SECTIONS = [
   {
     label: "Sistema",
     items: [
+      { label: "Categorias", href: "/admin/categorias" },
       { label: "Mídias", href: "/admin/midias" },
       { label: "Caixa de Entrada", href: "/admin/mensagens" },
       { label: "Configurações", href: "/admin/configuracoes" },

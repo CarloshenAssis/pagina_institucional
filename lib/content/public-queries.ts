@@ -8,7 +8,12 @@ export type PublicTable = "projects" | "ideas" | "news" | "albuns";
 
 export async function listPublished(
   table: PublicTable,
-  { page = 1, perPage = 12, categorySlug }: { page?: number; perPage?: number; categorySlug?: string } = {}
+  {
+    page = 1,
+    perPage = 12,
+    categorySlug,
+    stage,
+  }: { page?: number; perPage?: number; categorySlug?: string; stage?: string } = {}
 ) {
   const supabase = await createClient();
   const { from, to } = pageRange(page, perPage);
@@ -20,6 +25,7 @@ export async function listPublished(
     .order("published_at", { ascending: false })
     .range(from, to);
   if (categorySlug) query = query.eq("categories.slug", categorySlug);
+  if (stage) query = query.eq("project_stage", stage);
   const { data, count, error } = await query;
   if (error) throw error;
   let rows = (data ?? []).map((r) => ({ ...r, category_name: r.categories?.name ?? null }));

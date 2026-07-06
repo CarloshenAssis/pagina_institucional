@@ -2,16 +2,30 @@ import { describe, it, expect } from "vitest";
 import { nextStatusOnPublish, STATUS_LABELS } from "./status";
 
 describe("nextStatusOnPublish", () => {
-  it("publishes immediately when no future date is given", () => {
-    expect(nextStatusOnPublish(null)).toEqual({ status: "publicado", scheduled_at: null });
+  const now = new Date("2026-01-01T12:00:00.000Z");
+
+  it("publishes immediately when no future date is given, stamping published_at with now", () => {
+    expect(nextStatusOnPublish(null, now)).toEqual({
+      status: "publicado",
+      scheduled_at: null,
+      published_at: now.toISOString(),
+    });
   });
-  it("schedules when a future date is given", () => {
-    const future = new Date(Date.now() + 86_400_000).toISOString();
-    expect(nextStatusOnPublish(future)).toEqual({ status: "agendado", scheduled_at: future });
+  it("schedules when a future date is given, leaving published_at unset", () => {
+    const future = new Date(now.getTime() + 86_400_000).toISOString();
+    expect(nextStatusOnPublish(future, now)).toEqual({
+      status: "agendado",
+      scheduled_at: future,
+      published_at: null,
+    });
   });
-  it("publishes immediately when the given date is in the past", () => {
-    const past = new Date(Date.now() - 86_400_000).toISOString();
-    expect(nextStatusOnPublish(past)).toEqual({ status: "publicado", scheduled_at: null });
+  it("publishes immediately when the given date is in the past, stamping published_at with now", () => {
+    const past = new Date(now.getTime() - 86_400_000).toISOString();
+    expect(nextStatusOnPublish(past, now)).toEqual({
+      status: "publicado",
+      scheduled_at: null,
+      published_at: now.toISOString(),
+    });
   });
 });
 

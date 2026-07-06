@@ -62,7 +62,7 @@ export function Header({ siteName, logoUrl, items }: { siteName: string; logoUrl
             className="text-sm font-bold px-4 py-2 bg-rose text-white rounded-sm hover:opacity-90"
             style={{ backgroundColor: "var(--rose, #E8327C)" }}
           >
-            Contato
+            Escutando o Povo
           </Link>
         </nav>
 

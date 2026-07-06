@@ -6,7 +6,8 @@ import { createClient } from "@/lib/supabase/server";
 export async function listMessages(
   filter: "todas" | "nao_lidas" | "arquivadas",
   page: number,
-  search: string
+  search: string,
+  category?: string
 ) {
   const supabase = await createClient();
   let query = supabase
@@ -18,6 +19,7 @@ export async function listMessages(
 
   if (filter === "nao_lidas") query = query.eq("status", "nova");
   if (filter === "arquivadas") query = query.eq("status", "arquivada");
+  if (category) query = query.eq("category", category);
   if (search) query = query.or(`name.ilike.%${search}%,email.ilike.%${search}%,subject.ilike.%${search}%`);
 
   const { data, count, error } = await query;

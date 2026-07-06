@@ -95,9 +95,14 @@ export function ProjetosSection({ rows }: { rows: Row[] }) {
             <ProjectCard key={p.id} project={p as any} />
           ))}
         </div>
-        <Link href="/projetos" className="inline-block mt-8 text-sm font-bold underline text-primary">
-          Ver todos os projetos →
-        </Link>
+        <div className="mt-8 flex gap-6 flex-wrap">
+          <Link href="/projetos" className="text-sm font-bold underline text-primary">
+            Ver todos os projetos →
+          </Link>
+          <Link href="/conquistas" className="text-sm font-bold underline text-primary">
+            Ver conquistas →
+          </Link>
+        </div>
       </Reveal>
     </section>
   );

@@ -14,6 +14,7 @@ export function Footer({
   const socials = [
     { label: "Instagram", url: settings.instagram_url },
     { label: "Facebook", url: settings.facebook_url },
+    { label: "YouTube", url: settings.youtube_url },
     { label: "WhatsApp", url: settings.whatsapp_url ? whatsappLink(settings.whatsapp_url) : null },
   ].filter((s) => s.url);
 

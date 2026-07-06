@@ -15,7 +15,7 @@ export function visibleNavItems(settings: Record<string, string | null | undefin
     { label: "Ideias", href: "/ideias" },
     { label: "Notícias", href: "/noticias" },
     { label: "Agenda", href: "/agenda" },
-    { label: "Contato", href: "/contato" },
+    { label: "Escutando o Povo", href: "/contato" },
   ];
   return items.filter((i) => i.href !== "/agenda" || settings.agenda_page_enabled === "true");
 }

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { listMessages, markMessageStatus, softDeleteMessage } from "./actions";
 import { buildWhatsAppLink } from "./whatsapp";
+import { CONTACT_CATEGORIES, CONTACT_CATEGORY_LABELS, type ContactCategory } from "@/lib/content/contact-categories";
 
 type Filter = "todas" | "nao_lidas" | "arquivadas";
 
@@ -11,6 +12,7 @@ interface Message {
   name: string;
   email: string;
   phone: string | null;
+  category: ContactCategory;
   subject: string;
   message: string;
   status: "nova" | "lida" | "respondida" | "arquivada";
@@ -19,6 +21,7 @@ interface Message {
 
 export function Inbox() {
   const [filter, setFilter] = useState<Filter>("todas");
+  const [category, setCategory] = useState("");
   const [search, setSearch] = useState("");
   const [rows, setRows] = useState<Message[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -34,13 +37,13 @@ export function Inbox() {
   }
 
   useEffect(() => {
-    listMessages(filter, 1, search).then(({ rows }) => {
+    listMessages(filter, 1, search, category || undefined).then(({ rows }) => {
       const id = selectedIdRef.current ?? rows[0]?.id ?? null;
       selectedIdRef.current = id;
       setSelectedId(id);
       setRows(id ? markReadLocally(id, rows) : rows);
     });
-  }, [filter, search]);
+  }, [filter, search, category]);
 
   const selected = rows.find((r) => r.id === selectedId);
 
@@ -66,6 +69,19 @@ export function Inbox() {
           onChange={(e) => setSearch(e.target.value)}
           className="border-b p-3 w-full text-sm"
         />
+        <select
+          aria-label="Filtrar por categoria"
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          className="border-b p-3 w-full text-sm bg-transparent"
+        >
+          <option value="">Todas as categorias</option>
+          {CONTACT_CATEGORIES.map((c) => (
+            <option key={c} value={c}>
+              {CONTACT_CATEGORY_LABELS[c]}
+            </option>
+          ))}
+        </select>
         {rows.length === 0 && (
           <p className="p-5 text-sm text-muted-foreground">Nenhuma mensagem.</p>
         )}
@@ -85,12 +101,18 @@ export function Inbox() {
               </span>
             </div>
             <div className="text-sm">{m.subject}</div>
+            <span className="inline-block mt-1 text-[11px] font-bold uppercase tracking-wide text-primary">
+              {CONTACT_CATEGORY_LABELS[m.category]}
+            </span>
           </button>
         ))}
       </div>
       <div className="p-10">
         {selected && (
           <>
+            <span className="inline-block mb-2 text-xs font-bold uppercase tracking-wide text-primary">
+              {CONTACT_CATEGORY_LABELS[selected.category]}
+            </span>
             <h3 className="font-display text-xl mb-1">{selected.subject}</h3>
             <p className="text-sm text-muted-foreground mb-4">
               {selected.name} · {selected.email}

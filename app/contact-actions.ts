@@ -4,11 +4,13 @@ import { z } from "zod";
 import { createServiceRoleClient } from "@/lib/supabase/server";
 import { verifyTurnstile } from "@/lib/turnstile";
 import { isRateLimited } from "@/lib/rate-limit";
+import { CONTACT_CATEGORIES } from "@/lib/content/contact-categories";
 
 const contactSchema = z.object({
   name: z.string().min(1),
   email: z.string().email(),
   phone: z.string().optional(),
+  category: z.enum(CONTACT_CATEGORIES),
   subject: z.string().min(1),
   message: z.string().min(1),
   honeypot: z.string().max(0), // deve ficar vazio; bots preenchem tudo

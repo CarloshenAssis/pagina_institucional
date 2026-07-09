@@ -6,6 +6,20 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { nextStatusOnPublish } from "./status";
 import { slugify } from "./slug";
+import { notifySubscribers } from "@/lib/push/send";
+
+// Só os módulos com página pública própria disparam notificação ao
+// publicar. Trajetória e Agenda não têm rota individual — levam à
+// listagem. A cron de publicação agendada (SQL puro) não passa por aqui,
+// então conteúdo agendado não dispara push no momento em que fica público.
+const PUBLIC_ROUTE: Record<string, (row: Record<string, unknown>) => string> = {
+  trajetoria_items: () => "/trajetoria",
+  projects: (row) => `/projetos/${row.slug}`,
+  albuns: (row) => `/comunidade/${row.slug}`,
+  ideas: (row) => `/ideias/${row.slug}`,
+  news: (row) => `/noticias/${row.slug}`,
+  events: () => "/agenda",
+};
 
 export function buildDuplicatePayload<T extends Record<string, unknown>>(
   original: T,
@@ -75,9 +89,20 @@ export function createModuleActions(table: string, revalidateBase: string) {
         action === "publicar"
           ? nextStatusOnPublish(scheduledAtInput)
           : { status: action, scheduled_at: null };
-      const { error } = await supabase.from(table).update(payload).eq("id", id);
+      const { data, error } = await supabase.from(table).update(payload).eq("id", id).select("*").maybeSingle();
       if (error) throw error;
       revalidatePath(revalidateBase);
+
+      if (payload.status === "publicado" && data) {
+        const routeFor = PUBLIC_ROUTE[table];
+        if (routeFor) {
+          void notifySubscribers({
+            title: "Nova atualização",
+            body: String(data.title ?? ""),
+            url: routeFor(data),
+          }).catch(() => {});
+        }
+      }
     },
   };
 }

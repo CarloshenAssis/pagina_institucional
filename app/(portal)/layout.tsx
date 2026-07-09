@@ -7,6 +7,8 @@ import { Header } from "@/components/portal/header";
 import { Footer } from "@/components/portal/footer";
 import { WhatsAppFloat } from "@/components/portal/whatsapp-float";
 import { whatsappLink } from "@/lib/content/whatsapp";
+import { ServiceWorkerRegister } from "@/components/portal/service-worker-register";
+import { PushNotifications } from "@/components/portal/push-notifications";
 
 export async function generateMetadata(): Promise<Metadata> {
   const supabase = await createClient();
@@ -51,6 +53,8 @@ export default async function PortalLayout({ children }: { children: React.React
       <main className="flex-1 pt-16">{children}</main>
       <Footer siteName={siteName} settings={settings} items={items} />
       <WhatsAppFloat url={settings.whatsapp_url ? whatsappLink(settings.whatsapp_url) : null} />
+      <ServiceWorkerRegister />
+      <PushNotifications vapidPublicKey={process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY ?? null} />
     </>
   );
 }

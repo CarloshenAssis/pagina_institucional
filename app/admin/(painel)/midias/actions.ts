@@ -13,7 +13,12 @@ export async function uploadMedia(formData: FormData) {
   const supabase = await createClient();
   const bucket = bucketForType(type);
   const path = `${Date.now()}-${file.name}`;
-  const { error: uploadError } = await supabase.storage.from(bucket).upload(path, file);
+  // Path é único por upload (timestamp + nome) e nunca é sobrescrito, então
+  // cache longo é seguro — evita re-baixar do Storage a cada visita/crawler
+  // de preview (WhatsApp, Facebook) batendo no mesmo arquivo repetidamente.
+  const { error: uploadError } = await supabase.storage
+    .from(bucket)
+    .upload(path, file, { cacheControl: "31536000" });
   if (uploadError) return { error: uploadError.message };
   const { data: publicUrl } = supabase.storage.from(bucket).getPublicUrl(path);
   const { error: insertError } = await supabase.from("media_library").insert({
